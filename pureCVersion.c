@@ -70,6 +70,22 @@ struct iteration
 {
     int numIteration;
     int* idBasicVariables;
+    int* idNoBasicVariables;
+    int idVarIn;
+    int idVarOut;
+
+    double **Binv;
+    int BinvSize;
+
+    double *xb;
+    double *ct;
+    double *ctBinv;
+    double *zj;
+    double *cjMinusZj;
+    double *yj;
+    double *xbDivYj;
+
+    double zSol ;
 };
 
 struct problemStatement
@@ -96,6 +112,8 @@ struct problemStatement
     int funcObjectivePurpose;
     double *funcObjtValues;//Ultima posicion, termino independiente sin variables
     double *funcObjtValues2Fases;
+
+    double** ajVector; // guarda un vector por cada variable y contiene su valor en todas las constraints.
 };
 
 struct node
@@ -150,9 +168,15 @@ int freeMemoryStatement(struct problemStatement *pS)
     {
         free(pS->idConstraintTo2fasesVar);
         free(pS->idConstraintToSlopeVar);
+        for(i=0;pS->nVariables;i++)
+        {
+            free(pS->ajVector[i]);
+        }
+        free(pS->ajVector);
     }
     return 0;
 }
+
 int freeMemoryIteration(struct iteration *it)
 {
     //TODO
@@ -182,6 +206,29 @@ int freeMemoryExecution(struct execution *ex)
         freeMemoryNode(ex->nodes[i]);
     }
     return 0;
+}
+
+struct iteration* modelToIteration(struct problemStatement *pS)
+{
+    struct iteration *it;
+    int i,j;
+    it = malloc(sizeof(struct iteration));
+    it->numIteration=0;
+    //Matriz B-1
+    it->BinvSize=pS->nConstraints;
+    it->Binv=calloc(it->BinvSize,sizeof(double));
+    for(i=0;i<it->BinvSize;i++)
+    {
+        it->Binv[i]=calloc(it->BinvSize,sizeof(double));
+        //Falta rellenar
+    }
+    //xB iniciale
+    it->xb=calloc(it->BinvSize,sizeof(double));
+    for(i=0;i<it->BinvSize;i++)
+    {
+        it->xb[i]=pS->rightValues[i];
+    }
+    return it;
 }
 
 int lengthConcatenate(int sprintLength)
@@ -220,23 +267,20 @@ int printObjFunc(struct problemStatement* pS,int modelType)
     char *uselessSring[128];
     int menuChoice;
     menuChoice=INITIALIZE_VALUE_OPT;
+    sprintf(stroutTop,"Problem statement %s, OBJ. Exit %d",(pS->modelType==TYPE_INPUT) ? "INPUT" :"SOLVE", EXIT_OPT);
+    sprintf(stroutBasicInfo, "NConstraints: %d, NVariables: %d", pS->nConstraints, pS->nVariables);
+    if(modelType==TYPE_INPUT)
+    {
+        sprintf(stroutBasicInfo2, "OBJ %s", getFuncObjPurposeChar(pS->funcObjectivePurpose));
+        sprintf(stroutBasicInfo3, "Ind term: %.2f. Sel var", pS->funcObjtValues[pS->nVariables]);
+    }else
+    {
+        sprintf(stroutBasicInfo2, "OBJ MIN");
+        sprintf(stroutBasicInfo3, "Ind term: %.2f. Sel var", pS->funcObjtValues2Fases[pS->nVariables]);
+    }
     while(menuChoice!=EXIT_OPT)
     {
         Bdisp_AllClr_DDVRAM();
-        sprintf(stroutTop,"Problem statement %s, OBJ. Exit %d",(pS->modelType==TYPE_INPUT) ? "INPUT" :"SOLVE", EXIT_OPT);
-        sprintf(stroutBasicInfo, "NConstraints: %d, NVariables: %d", pS->nConstraints, pS->nVariables);
-        if(modelType==TYPE_INPUT)
-        {
-            sprintf(stroutBasicInfo2, "OBJ %s", getFuncObjPurposeChar(pS->funcObjectivePurpose));
-             sprintf(stroutBasicInfo3, "Ind term: %.2f. Sel var", pS->funcObjtValues[pS->nVariables]);
-        }else
-        {
-            sprintf(stroutBasicInfo2, "OBJ MIN");
-             sprintf(stroutBasicInfo3, "Ind term: %.2f. Sel var", pS->funcObjtValues2Fases[pS->nVariables]);
-        }
-        
-        
-       
         PrintMini(0,0,  (unsigned char *)stroutTop, MINI_OVER);
         PrintMini(0,7,  (unsigned char *)stroutBasicInfo, MINI_OVER);
         PrintMini(0, 14, (unsigned char*)stroutBasicInfo2, MINI_OVER);
@@ -262,11 +306,61 @@ int printObjFunc(struct problemStatement* pS,int modelType)
     return 0;
 }
 
+int printAjVal(struct problemStatement* pS, int varId)
+{
+    char stroutBasicInfo[128],stroutVariable[128];
+    char *uselessSring[128];
+    int menuChoice;
+    menuChoice=INITIALIZE_VALUE_OPT;
+    sprintf(stroutBasicInfo, "Ax%d. nConstraints: %d, Exit %d",varId,pS->nConstraints,EXIT_OPT);
+    while(menuChoice!=EXIT_OPT)
+    {
+        Bdisp_AllClr_DDVRAM();
+        PrintMini(0, 0, (unsigned char*)stroutBasicInfo, MINI_OVER);
+        menuChoice=InputI(0,7);
+        Bdisp_PutDisp_DD();
+        if(menuChoice!=EXIT_OPT && menuChoice<=pS->nConstraints)
+        {
+            Bdisp_AllClr_DDVRAM();
+            sprintf(stroutVariable, "Ax%d. %.2f Pos %d",varId,pS->ajVector[varId-1][menuChoice-1],menuChoice);
+            PrintMini(0,0,(unsigned char*) stroutVariable,MINI_OVER);
+            PrintMini(0, 7, (unsigned char*)"Press any key to continue", MINI_OVER);
+            string_input(0, 14, uselessSring);
+            Bdisp_PutDisp_DD();
+            memset(stroutVariable,0,128);
+        }
+    }
+    return 0;
+}
+
+int printAjVec(struct problemStatement* pS)
+{
+    char stroutBasicInfo[128];
+    int menuChoice;
+    menuChoice=INITIALIZE_VALUE_OPT;
+    while(menuChoice!=EXIT_OPT)
+    {
+        Bdisp_AllClr_DDVRAM();
+        sprintf(stroutBasicInfo, "Axj pMenu Vars %d.  %d exit",pS->nVariables,EXIT_OPT);
+        PrintMini(0, 0, (unsigned char*)stroutBasicInfo, MINI_OVER);
+        menuChoice = InputI(0, 7);
+        Bdisp_PutDisp_DD();
+        if(menuChoice!=EXIT_OPT && menuChoice<=pS->nVariables)
+        {
+            printAjVal(pS,menuChoice);
+        }
+    }
+    return 0;
+}
+
 int printStatementMenu(struct problemStatement* pS)
 {
     char stroutTop[128],stroutBasicInfo[128],stroutObjInfo[128];
     int menuChoice;
     menuChoice=INITIALIZE_VALUE_OPT;
+    sprintf(stroutTop,"Problem statement %s, printMenu. Exit %d",(pS->modelType==TYPE_INPUT) ? "INPUT" :"SOLVE", EXIT_OPT);
+    sprintf(stroutBasicInfo, "NConstraints: %d, NVariables: %d", pS->nConstraints, pS->nVariables);
+
     if(pS->modelType==TYPE_SOLVE && pS->is2fasesNeeded)
     {
         sprintf(stroutObjInfo,"2 Pinfo obj func. 3 Pinfo 2fases");
@@ -278,12 +372,15 @@ int printStatementMenu(struct problemStatement* pS)
     while(menuChoice!=EXIT_OPT)
     {
         Bdisp_AllClr_DDVRAM();
-        sprintf(stroutTop,"Problem statement %s, printMenu. Exit %d",(pS->modelType==TYPE_INPUT) ? "INPUT" :"SOLVE", EXIT_OPT);
-        sprintf(stroutBasicInfo, "NConstraints: %d, NVariables: %d", pS->nConstraints, pS->nVariables);
+        
         PrintMini(0,0,  (unsigned char *)stroutTop, MINI_OVER);
         PrintMini(0,7,  (unsigned char *)stroutBasicInfo, MINI_OVER);
         PrintMini(0, 14, (unsigned char*)"1 Pinfo constraint", MINI_OVER);
         PrintMini(0, 21, (unsigned char*)stroutObjInfo, MINI_OVER);
+        if(pS->modelType==TYPE_SOLVE)
+        {
+            PrintMini(0, 28, (unsigned char*)"4 Pinfo aj vec", MINI_OVER);
+        }
         menuChoice = InputI(0, 35);
         Bdisp_PutDisp_DD();
         switch (menuChoice)
@@ -291,6 +388,7 @@ int printStatementMenu(struct problemStatement* pS)
         case 1: printAllConstraintsMenu(pS);break;
         case 2: printObjFunc(pS,TYPE_INPUT);break;
         case 3: if(pS->modelType==TYPE_SOLVE){printObjFunc(pS,TYPE_SOLVE);};break;
+        case 4: if(pS->modelType==TYPE_SOLVE){printAjVec(pS);};break;
         default: break;
         }
     }
@@ -648,14 +746,13 @@ struct problemStatement* convertModel(struct problemStatement* pInput)
     modelToSolve->rightValues=calloc(modelToSolve->nConstraints,sizeof(double));
     modelToSolve->inequalitySigns=calloc(modelToSolve->nConstraints,sizeof(int));
     modelToSolve->idIntegerVariables=calloc(modelToSolve->nVariables,sizeof(int));
-    
 
     for(i=0;i<modelToSolve->nConstraints;i++)
     {
         modelToSolve->constraints[i]=calloc(modelToSolve->nVariables,sizeof(double));
-        for(j=0;j<modelToSolve->nVariables;j++)//Copiar variables de entrada
+        for(j=0;j<modelToSolve->nVariables;j++)
         {
-            if(j<pInput->nVariables)
+            if(j<pInput->nVariables)//Copiar variables de entrada
             {
                 modelToSolve->constraints[i][j]=pInput->constraints[i][j];
                 modelToSolve->idIntegerVariables[i]=pInput->idIntegerVariables[i];
@@ -669,6 +766,7 @@ struct problemStatement* convertModel(struct problemStatement* pInput)
             {
                 modelToSolve->constraints[i][j]=1;
             }
+            //Cualquier otro caso tiene un 0 por calloc
         }
         modelToSolve->rightValues[i]=pInput->rightValues[i];
     }
@@ -684,6 +782,18 @@ struct problemStatement* convertModel(struct problemStatement* pInput)
             modelToSolve->funcObjtValues2Fases[i]=1;
         }
     }
+
+    //Create aj vectors
+    modelToSolve->ajVector=calloc(modelToSolve->nVariables,sizeof(double));
+    for(i=0;i<modelToSolve->nVariables;i++)
+    {
+        modelToSolve->ajVector[i]=calloc(modelToSolve->nConstraints,sizeof(double));
+        for(j=0;j<modelToSolve->nConstraints;j++)
+        {
+            modelToSolve->ajVector[i][j]=modelToSolve->constraints[j][i];
+        }
+    }
+
     modelToSolve->funcObjtValues[modelToSolve->nVariables]=pInput->funcObjtValues[pInput->nVariables];
     modelToSolve->modelType=TYPE_SOLVE;
     return modelToSolve;
