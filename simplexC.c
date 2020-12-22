@@ -1,9 +1,11 @@
 #include "fxlib.h"
 #include "revolution.h"
+#include "limits.h"
 #include <stdlib.h>
 #include "stdio.h"
 #include "SH4_compatibility.h"
 
+#define NO_EVAL_VALUE INT_MAX
 
 #define TYPE_LP 1
 #define TYPE_ILP 2
@@ -581,7 +583,7 @@ struct problemStatement* getProblemInputs()
         memset(strout,0,128);
     }
     Bdisp_AllClr_DDVRAM();
-    sprintf(strout,"Obj value Independent",i+1);
+    sprintf(strout,"Obj value Independent");
     PrintMini(0, 0, (unsigned char *)strout, MINI_OVER);
     funcObjtValues[nVariables] = InputD(0, 7);
     Bdisp_PutDisp_DD();
