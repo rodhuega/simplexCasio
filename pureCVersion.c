@@ -412,7 +412,8 @@ int calculateIteration(struct execution *ex,struct iteration *it)
     
     for(i=0;i<ex->nVariables;i++)
     {
-        if(!it->idBasicVariables[i])
+        if((!it->idBasicVariables[i] && ex->canonicalStatement->is2fasesActive) ||
+            (!it->idBasicVariables[i] && !ex->canonicalStatement->is2fasesActive && !ex->canonicalStatement->id2fasesVariables[i]) )
         {
             it->zj[i]=calculateVectorDotProduct(it->BinvSize,it->ctBinv,ex->ajVector[i]);
             it->cjMinusZj[i]=cVectorValues[i]-it->zj[i];
@@ -1067,6 +1068,52 @@ int convertModel(struct execution* ex)
     return 0;
 }
 
+struct problemStatement* createProblemStatementToDebug2Fases()
+{
+    struct problemStatement *res;
+    int nConstraints;
+    int nVariables;
+    nConstraints=3;
+    nVariables=2;
+    res= malloc(sizeof(struct problemStatement));
+    res->modelType=TYPE_INPUT;
+    res->nConstraints=nConstraints;
+    res->nVariables=nVariables;
+    res->nVariables2fases=1;
+    res ->nVariablesSlope=2;
+    res->problemType=TYPE_LP;
+    res -> funcObjtValues = calloc(nVariables+1,sizeof(double));
+    res->idIntegerVariables=calloc(nVariables,sizeof(int));
+    res->idSlopeVariables= calloc(nVariables,sizeof(int));
+    res->id2fasesVariables=calloc(nVariables,sizeof(int));
+    res->inequalitySigns=calloc(nConstraints,sizeof(int));
+    res->inequalitySigns[0]=INE_LESS_OR_EQUAL_THAN;
+    res->inequalitySigns[1]=INE_LESS_OR_EQUAL_THAN;
+    res->inequalitySigns[2]=INE_EQUAL;
+    res->funcObjectivePurpose=FUNC_MAXIMIZE;
+    res->funcObjtValues[0]=3;
+    res->funcObjtValues[1]=5;
+    res->funcObjtValues[2]=0;
+    res->constraints=calloc(nConstraints,sizeof(double));
+    res->constraints[0]=calloc(nVariables,sizeof(double));
+    res->constraints[1]=calloc(nVariables,sizeof(double));
+    res->constraints[2]=calloc(nVariables,sizeof(double));
+    res->constraints[0][0]=1;
+    res->constraints[0][1]=0;
+    res->constraints[1][0]=0;
+    res->constraints[1][1]=2;
+    res->constraints[2][0]=3;
+    res->constraints[2][1]=2;
+    res->rightValues=calloc(nConstraints,sizeof(double));
+    res->rightValues[0]=4;
+    res->rightValues[1]=12;
+    res->rightValues[2]=18;
+    res->nVariables2fases=1;
+    res->is2fasesNeeded=1;
+
+    return res;
+}
+
 struct problemStatement* createProblemStatementToDebug()
 {
     struct problemStatement *res;
@@ -1113,17 +1160,107 @@ struct problemStatement* createProblemStatementToDebug()
     return res;
 }
 
+struct iteration *convertToSecondPhase(struct execution *ex, int nodeId, int firsItId)
+{
+    int i,j;
+    struct iteration *it,*originalIt;
+    originalIt=ex->nodes[nodeId]->its[firsItId];
+    it = malloc(sizeof(struct iteration));
+    it->BinvSize=originalIt->BinvSize;
+    it->Binv=calloc(it->BinvSize,sizeof(double));
+    for(i=0;i<it->BinvSize;i++)
+    {
+        it->Binv[i]=calloc(it->BinvSize,sizeof(double));
+        for(j=0;j<it->BinvSize;j++)
+        {
+            it->Binv[i][j]=originalIt->Binv[i][j];
+        }
+        
+    }
+    it->idBasicVariables=calloc(ex->nVariables,sizeof(int));
+    it->idByRowOfBasicVarsInBInv=calloc(it->BinvSize,sizeof(int));
+    for(i=0;i<it->BinvSize;i++)
+    {
+        it->idByRowOfBasicVarsInBInv[i]=originalIt->idByRowOfBasicVarsInBInv[i];
+    }
+    for(i=0;i<ex->nVariables;i++)
+    {
+        it->idBasicVariables[i]=originalIt->idBasicVariables[i];
+    }
+    //Cambio de ctbInv y de z sol.
+    return it;
+}
+
+int solveSimplexLPOneFase(struct execution *ex, int nodeId, int firsItId)
+{
+    int itId;
+    itId=firsItId;
+    ex->nodes[nodeId]->its[itId]->numIteration=itId;
+    while(ex->nodes[nodeId]->its[itId]->idVarIn!=-1 && ex->nodes[nodeId]->its[itId]->idVarOut!=-1)
+    {
+        calculateIteration(ex,ex->nodes[nodeId]->its[itId]);
+        printf("Iter %d\n",itId);
+        printMatrix(ex->nodes[nodeId]->its[itId]->BinvSize,ex->nodes[nodeId]->its[itId]->Binv);
+        if(ex->nodes[nodeId]->its[itId]->idVarIn!=-1 && ex->nodes[nodeId]->its[itId]->idVarOut!=-1){
+            ex->nodes[nodeId]->its[itId+1]=createNewIteration(ex,ex->nodes[nodeId]->its[itId]);
+            itId++;
+        }
+            
+    }
+    return itId;
+}
+
+int solveSimplexLP(struct execution *ex, int nodeId)
+{
+    int itId,lastItId;
+    itId=0;
+    ex->nodes[nodeId]=malloc(sizeof(struct node));
+    ex->nodes[nodeId]->id=nodeId;
+    ex->nodes[nodeId]->its=malloc(10*sizeof(struct iteration*));
+    ex->nodes[nodeId]->its[0]=modelToIteration(ex->canonicalStatement);
+    if(ex->canonicalStatement->is2fasesActive)
+    {
+        lastItId=solveSimplexLPOneFase(ex,nodeId, 0);
+        ex->currentFuncObjectivePurpose=ex->canonicalStatement->funcObjectivePurpose;//CAMBIAR
+        //NO SE SI HACE FALTA MAS
+        ex->canonicalStatement->is2fasesActive=0;
+        ex->nodes[nodeId]->its[lastItId+1]=convertToSecondPhase(ex,nodeId, lastItId);
+        solveSimplexLPOneFase(ex,nodeId, lastItId+1);
+    }else
+    {
+        solveSimplexLPOneFase(ex,nodeId, 0);
+    }
+    
+    
+    return 0;
+}
+
+
+int initializeExecution(struct execution *ex)
+{
+    ex->bVectorValues=ex->canonicalStatement->rightValues;
+    if(ex->canonicalStatement->is2fasesNeeded)
+    {
+        ex->canonicalStatement->is2fasesActive=1;
+        ex->currentFuncObjectivePurpose=FUNC_MINIMIZE;
+    }else
+    {
+        ex->currentFuncObjectivePurpose=ex->canonicalStatement->funcObjectivePurpose;
+    }
+    ex->inputCvectorValues=ex->canonicalStatement->funcObjtValues;
+    ex->fases2CvectorValues=ex->canonicalStatement->funcObjtValues2Fases;
+    ex->nodes=malloc(10*sizeof(struct node*));
+    return 0;
+}
+
 int AddIn_main(int isAppli, unsigned short OptionNum)
 {
     char str[128];
-    int itId,nodeId;
-    itId=0;
-    nodeId=0;
     struct execution *ex;
     ex = selectExecutionMode();
     if(ex->mode==MODE_FULL_EXECUTION)
     {
-        ex->initialProblemStatement=createProblemStatementToDebug();
+        ex->initialProblemStatement=createProblemStatementToDebug2Fases();
         // ex->initialProblemStatement=getProblemInputs();
         // Bdisp_AllClr_DDVRAM();
         // sprintf(str,"nSlope %d, N2F %d",ex->initialProblemStatement->nVariablesSlope,ex->initialProblemStatement->nVariables2fases);
@@ -1133,35 +1270,8 @@ int AddIn_main(int isAppli, unsigned short OptionNum)
         // printStatementMenu(ex->initialProblemStatement);
         convertModel(ex);
         printStatementMenu(ex->canonicalStatement);
-        ex->bVectorValues=ex->canonicalStatement->rightValues;
-        if(ex->canonicalStatement->is2fasesNeeded)
-        {
-            ex->currentFuncObjectivePurpose=FUNC_MINIMIZE;
-        }else
-        {
-            ex->currentFuncObjectivePurpose=ex->canonicalStatement->funcObjectivePurpose;
-        }
-        ex->inputCvectorValues=ex->canonicalStatement->funcObjtValues;
-        ex->fases2CvectorValues=ex->canonicalStatement->funcObjtValues2Fases;
-        ex->nodes=malloc(10*sizeof(struct node*));
-        ex->nNodes=1;
-        ex->nodes[0]=malloc(sizeof(struct node));
-        ex->nodes[0]->id=nodeId;
-        ex->nodes[0]->its=malloc(10*sizeof(struct iteration*));
-        ex->nodes[0]->its[0]=modelToIteration(ex->canonicalStatement);
-        ex->nodes[0]->its[0]->numIteration=itId;
-        while(ex->nodes[0]->its[itId]->idVarIn!=-1 && ex->nodes[0]->its[itId]->idVarOut!=-1)
-        {
-            calculateIteration(ex,ex->nodes[0]->its[itId]);
-            printf("Iter %d\n",itId);
-            printMatrix(ex->nodes[0]->its[itId]->BinvSize,ex->nodes[0]->its[itId]->Binv);
-            if(ex->nodes[0]->its[itId]->idVarIn!=-1 && ex->nodes[0]->its[itId]->idVarOut!=-1){
-                ex->nodes[0]->its[itId+1]=createNewIteration(ex,ex->nodes[0]->its[itId]);
-                itId++;
-            }
-                
-        }
-        
+        initializeExecution(ex);
+        solveSimplexLP(ex,0);
 
     }else if(ex->mode==MODE_INPUT_TABLE)
     {
