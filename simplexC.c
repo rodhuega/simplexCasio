@@ -15,7 +15,9 @@
 #define TYPE_SOLVE 2
 
 #define INITIALIZE_VALUE_OPT -1
+#define INITIALIZE_VALUE_OPT_ITS_MENU -2
 #define EXIT_OPT 0
+#define EXIT_OPT_ITS_MENU -1
 
 #define INE_EQUAL 0
 #define INE_LESS_OR_EQUAL_THAN 1
@@ -33,6 +35,7 @@
 struct iteration
 {
     int numIteration;
+    int is2FasesActive; //1 si esta activado. 0 en caso contrario
     int* idBasicVariables;//1 si esa variable es Basica. 0 sera NoBasica
     int *idByRowOfBasicVarsInBInv;//ejemplo [0]->2. la row 0 tiene asociala la variable 3
     int isUnbounded;//1 en caso de si, 0 en caso de no
@@ -105,6 +108,7 @@ struct execution
     int nNodes;
     int currentFuncObjectivePurpose;
     int nVariables;
+    int nConstraints;
 
     float** ajVector; // guarda un vector por cada variable y contiene su valor en todas las constraints.
 };
@@ -335,6 +339,7 @@ int calculateIteration(struct iteration *it)
     int i;
     float * cVectorValues,*ct;
     float bestEntryVarValue,bestExitVarValue;
+    it->is2FasesActive=ex.canonicalStatement->is2fasesActive;
     cVectorValues=getCurrentCvectorValues(it);
     ct=getCurrentCt(it);
     it->ct=ct;
@@ -405,9 +410,15 @@ int calculateIteration(struct iteration *it)
         if(!it->isUnbounded)
         {
             it->idVarOut=it->idByRowOfBasicVarsInBInv[it->indexVarOutInBInvMatrix];
+        }else
+        {
+            it->idVarOut=-1;
         }
-        
+    }else
+    {
+        it->idVarOut=-1;
     }
+    
     
 }
 
@@ -517,23 +528,23 @@ int printObjFunc(struct problemStatement* pS,int modelType)
     return 0;
 }
 
-int printAjVal(struct problemStatement* pS, int varId)
+int printAjVal(int varId)
 {
     char stroutBasicInfo[128],stroutVariable[128];
     char *uselessSring[128];
     int menuChoice;
     menuChoice=INITIALIZE_VALUE_OPT;
-    sprintf(stroutBasicInfo, "Ax%d. nConstraints: %d, Exit %d",varId,pS->nConstraints,EXIT_OPT);
+    sprintf(stroutBasicInfo, "Ax%d. nConstraints: %d, Exit %d",varId,ex.nConstraints,EXIT_OPT);
     while(menuChoice!=EXIT_OPT)
     {
         Bdisp_AllClr_DDVRAM();
         PrintMini(0, 0, (unsigned char*)stroutBasicInfo, MINI_OVER);
         menuChoice=InputI(0,7);
         Bdisp_PutDisp_DD();
-        if(menuChoice!=EXIT_OPT && menuChoice<=pS->nConstraints)
+        if(menuChoice!=EXIT_OPT && menuChoice<=ex.nConstraints)
         {
             Bdisp_AllClr_DDVRAM();
-            sprintf(stroutVariable, "Ax%d. %.2f Pos %d",varId,pS->ajVector[varId-1][menuChoice-1],menuChoice);
+            sprintf(stroutVariable, "Ax%d. %.2f Pos %d",varId,ex.ajVector[varId-1][menuChoice-1],menuChoice);
             PrintMini(0,0,(unsigned char*) stroutVariable,MINI_OVER);
             PrintMini(0, 7, (unsigned char*)"Press any key to continue", MINI_OVER);
             string_input(0, 14, uselessSring);
@@ -544,7 +555,7 @@ int printAjVal(struct problemStatement* pS, int varId)
     return 0;
 }
 
-int printAjVec(struct problemStatement* pS)
+int printAjVec()
 {
     char stroutBasicInfo[128];
     int menuChoice;
@@ -552,13 +563,13 @@ int printAjVec(struct problemStatement* pS)
     while(menuChoice!=EXIT_OPT)
     {
         Bdisp_AllClr_DDVRAM();
-        sprintf(stroutBasicInfo, "Axj pMenu Vars %d.  %d exit",pS->nVariables,EXIT_OPT);
+        sprintf(stroutBasicInfo, "Axj pMenu Vars %d.  %d exit",ex.nVariables,EXIT_OPT);
         PrintMini(0, 0, (unsigned char*)stroutBasicInfo, MINI_OVER);
         menuChoice = InputI(0, 7);
         Bdisp_PutDisp_DD();
-        if(menuChoice!=EXIT_OPT && menuChoice<=pS->nVariables)
+        if(menuChoice!=EXIT_OPT && menuChoice<=ex.nVariables)
         {
-            printAjVal(pS,menuChoice);
+            printAjVal(menuChoice);
         }
     }
     return 0;
@@ -719,9 +730,141 @@ int printStatementMenu(struct problemStatement* pS)
         case 1: printAllConstraintsMenu(pS);break;
         case 2: printObjFunc(pS,TYPE_INPUT);break;
         case 3: if(pS->modelType==TYPE_SOLVE){printObjFunc(pS,TYPE_SOLVE);};break;
-        case 4: if(pS->modelType==TYPE_SOLVE){printAjVec(pS);};break;
+        case 4: if(pS->modelType==TYPE_SOLVE){printAjVec();};break;
         default: break;
         }
+    }
+    return 0;
+}
+
+int printCtVecByIt(int itId)
+{
+    char stroutBasicInfo[128],stroutBasicInfo2[128];
+    int menuChoice;
+    char *uselessSring[128];
+    menuChoice=INITIALIZE_VALUE_OPT;
+    while(menuChoice!=EXIT_OPT)
+    {
+        Bdisp_AllClr_DDVRAM();
+        sprintf(stroutBasicInfo, "Ct itId %d. S: %d.  %d exit",itId, ex.nodes.its[itId]->BinvSize,EXIT_OPT);
+        PrintMini(0, 0, (unsigned char*)stroutBasicInfo, MINI_OVER);
+        menuChoice = InputI(0, 7);
+        Bdisp_PutDisp_DD();
+        if(menuChoice!=EXIT_OPT && menuChoice<= ex.nodes.its[itId]->BinvSize)
+        {
+            sprintf(stroutBasicInfo2, "Pos %d: %.2f",menuChoice,ex.nodes.its[itId]->ct[menuChoice-1]);
+            PrintMini(0,14,(unsigned char*) stroutBasicInfo2,MINI_OVER);
+            PrintMini(0, 21, (unsigned char*)"Press any key to continue", MINI_OVER);
+            string_input(0, 28, uselessSring);
+            Bdisp_PutDisp_DD();
+        }
+        memset(stroutBasicInfo2,0,128);
+    }
+    return 0;
+}
+
+
+int printXbByIt(int itId)
+{
+    char stroutBasicInfo[128],stroutBasicInfo2[128];
+    int menuChoice;
+    char *uselessSring[128];
+    menuChoice=INITIALIZE_VALUE_OPT;
+    while(menuChoice!=EXIT_OPT)
+    {
+        Bdisp_AllClr_DDVRAM();
+        sprintf(stroutBasicInfo, "Xb itId %d. S: %d.  %d exit",itId, ex.nodes.its[itId]->BinvSize,EXIT_OPT);
+        PrintMini(0, 0, (unsigned char*)stroutBasicInfo, MINI_OVER);
+        menuChoice = InputI(0, 7);
+        Bdisp_PutDisp_DD();
+        if(menuChoice!=EXIT_OPT && menuChoice<= ex.nodes.its[itId]->BinvSize)
+        {
+            sprintf(stroutBasicInfo2, "Pos %d: %.2f",menuChoice,ex.nodes.its[itId]->xb[menuChoice-1]);
+            PrintMini(0,14,(unsigned char*) stroutBasicInfo2,MINI_OVER);
+            PrintMini(0, 21, (unsigned char*)"Press any key to continue", MINI_OVER);
+            string_input(0, 28, uselessSring);
+            Bdisp_PutDisp_DD();
+        }
+        memset(stroutBasicInfo2,0,128);
+    }
+    return 0;
+}
+
+int printYandXbDivYByIt(int itId)
+{
+    char stroutBasicInfo[128],stroutBasicInfo2[128];
+    int menuChoice;
+    char *uselessSring[128];
+    menuChoice=INITIALIZE_VALUE_OPT;
+    while(menuChoice!=EXIT_OPT)
+    {
+        Bdisp_AllClr_DDVRAM();
+        sprintf(stroutBasicInfo, "Y & xb/y itId %d. S: %d.  %d exit",itId, ex.nodes.its[itId]->BinvSize,EXIT_OPT);
+        PrintMini(0, 0, (unsigned char*)stroutBasicInfo, MINI_OVER);
+        menuChoice = InputI(0, 7);
+        Bdisp_PutDisp_DD();
+        if(menuChoice!=EXIT_OPT && menuChoice<= ex.nodes.its[itId]->BinvSize)
+        {
+            sprintf(stroutBasicInfo2, "Pos %d: Y: %.2f xb/y: %.2f",menuChoice,ex.nodes.its[itId]->yj[menuChoice-1],ex.nodes.its[itId]->xbDivYj[menuChoice-1]);
+            PrintMini(0,14,(unsigned char*) stroutBasicInfo2,MINI_OVER);
+            PrintMini(0, 21, (unsigned char*)"Press any key to continue", MINI_OVER);
+            string_input(0, 28, uselessSring);
+            Bdisp_PutDisp_DD();
+        }
+        memset(stroutBasicInfo2,0,128);
+    }
+    return 0;
+}
+
+
+int printCtBinvByIt(int itId)
+{
+    char stroutBasicInfo[128],stroutBasicInfo2[128];
+    int menuChoice;
+    char *uselessSring[128];
+    menuChoice=INITIALIZE_VALUE_OPT;
+    while(menuChoice!=EXIT_OPT)
+    {
+        Bdisp_AllClr_DDVRAM();
+        sprintf(stroutBasicInfo, "CtBinv itId %d. S: %d.  %d exit",itId, ex.nodes.its[itId]->BinvSize,EXIT_OPT);
+        PrintMini(0, 0, (unsigned char*)stroutBasicInfo, MINI_OVER);
+        menuChoice = InputI(0, 7);
+        Bdisp_PutDisp_DD();
+        if(menuChoice!=EXIT_OPT && menuChoice<= ex.nodes.its[itId]->BinvSize)
+        {
+            sprintf(stroutBasicInfo2, "Pos %d: %.2f",menuChoice,ex.nodes.its[itId]->ctBinv[menuChoice-1]);
+            PrintMini(0,14,(unsigned char*) stroutBasicInfo2,MINI_OVER);
+            PrintMini(0, 21, (unsigned char*)"Press any key to continue", MINI_OVER);
+            string_input(0, 28, uselessSring);
+            Bdisp_PutDisp_DD();
+        }
+        memset(stroutBasicInfo2,0,128);
+    }
+    return 0;
+}
+
+int printBasicVarsBbyIt(int itId)
+{
+    char stroutBasicInfo[128],stroutBasicInfo2[128];
+    int menuChoice;
+    char *uselessSring[128];
+    menuChoice=INITIALIZE_VALUE_OPT;
+    while(menuChoice!=EXIT_OPT)
+    {
+        Bdisp_AllClr_DDVRAM();
+        sprintf(stroutBasicInfo, "BVars itId %d. S: %d.  %d exit",itId, ex.nodes.its[itId]->BinvSize,EXIT_OPT);
+        PrintMini(0, 0, (unsigned char*)stroutBasicInfo, MINI_OVER);
+        menuChoice = InputI(0, 7);
+        Bdisp_PutDisp_DD();
+        if(menuChoice!=EXIT_OPT && menuChoice<= ex.nodes.its[itId]->BinvSize)
+        {
+            sprintf(stroutBasicInfo2, "Pos %d: %d",menuChoice,ex.nodes.its[itId]->idByRowOfBasicVarsInBInv[menuChoice-1]+1);
+            PrintMini(0,14,(unsigned char*) stroutBasicInfo2,MINI_OVER);
+            PrintMini(0, 21, (unsigned char*)"Press any key to continue", MINI_OVER);
+            string_input(0, 28, uselessSring);
+            Bdisp_PutDisp_DD();
+        }
+        memset(stroutBasicInfo2,0,128);
     }
     return 0;
 }
@@ -775,8 +918,160 @@ int printResVariables()
     return 0;
 }
 
+int printCValuesByIt(int itId)
+{
+    char stroutBasicInfo[128],stroutBasicInfo2[128];
+    int menuChoice;
+    char *uselessSring[128];
+    menuChoice=INITIALIZE_VALUE_OPT;
+    while(menuChoice!=EXIT_OPT)
+    {
+        Bdisp_AllClr_DDVRAM();
+        sprintf(stroutBasicInfo, "Cvals itId %d. Vars: %d.  %d exit",itId, ex.nVariables,EXIT_OPT);
+        PrintMini(0, 0, (unsigned char*)stroutBasicInfo, MINI_OVER);
+        menuChoice = InputI(0, 7);
+        Bdisp_PutDisp_DD();
+        if(menuChoice!=EXIT_OPT && menuChoice<= ex.nVariables)
+        {
+            sprintf(stroutBasicInfo2, "Pos %d: %.2f",menuChoice,getCurrentCvectorValues(ex.nodes.its[itId])[menuChoice-1]);
+            PrintMini(0,14,(unsigned char*) stroutBasicInfo2,MINI_OVER);
+            PrintMini(0, 21, (unsigned char*)"Press any key to continue", MINI_OVER);
+            string_input(0, 28, uselessSring);
+            Bdisp_PutDisp_DD();
+        }
+        memset(stroutBasicInfo2,0,128);
+    }
+    return 0;
+}
+
+int printBinvByIt(int itId)
+{
+    char stroutBasicInfo[128],stroutBasicInfo2[128];
+    int menuChoiceRow,menuChoiceColumn;
+    char *uselessSring[128];
+    menuChoiceRow=INITIALIZE_VALUE_OPT;
+    menuChoiceColumn=INITIALIZE_VALUE_OPT;
+    sprintf(stroutBasicInfo, "Binv itId %d. S: %d.  %d exit",itId, ex.nodes.its[itId]->BinvSize,EXIT_OPT);
+
+    while(menuChoiceRow!=EXIT_OPT && menuChoiceColumn!=EXIT_OPT)
+    {
+        Bdisp_AllClr_DDVRAM();
+        PrintMini(0, 0, (unsigned char*)stroutBasicInfo, MINI_OVER);
+        PrintMini(0, 7, (unsigned char*)"Row: ", MINI_OVER);
+        menuChoiceRow = InputI(0, 14);
+        Bdisp_PutDisp_DD();
+        PrintMini(0, 21, (unsigned char*)"Column: ", MINI_OVER);
+        menuChoiceColumn = InputI(0, 28);
+        Bdisp_PutDisp_DD();
+        if(menuChoiceRow!=EXIT_OPT && menuChoiceRow <= ex.nodes.its[itId]->BinvSize
+            && menuChoiceColumn!=EXIT_OPT && menuChoiceColumn <= ex.nodes.its[itId]->BinvSize)
+        {
+            sprintf(stroutBasicInfo2, "B[%d][%d]: %.2f",menuChoiceRow,menuChoiceColumn,ex.nodes.its[itId]->Binv[menuChoiceRow-1][menuChoiceColumn-1]);
+            PrintMini(0,35,(unsigned char*) stroutBasicInfo2,MINI_OVER);
+            PrintMini(0, 42, (unsigned char*)"Press any key to continue", MINI_OVER);
+            string_input(0, 49, uselessSring);
+            Bdisp_PutDisp_DD();
+        }
+        memset(stroutBasicInfo2,0,128);
+    }
+    return 0;
+}
+
+int printZjAndCjMinusZj(int itId)
+{
+    char stroutTop[128],stroutBasicInfo[128],stroutBasicInfo2[128],stroutVariable[128];
+    char *uselessSring[128];
+    int menuChoice,i,idBasicVar;
+    menuChoice=INITIALIZE_VALUE_OPT;
+    sprintf(stroutBasicInfo, "Zj & cj-zj itId %d. S: %d.  %d exit",itId, ex.nVariables,EXIT_OPT);
+
+
+    while(menuChoice!=EXIT_OPT)
+    {
+        Bdisp_AllClr_DDVRAM();
+        
+        PrintMini(0,0,  (unsigned char *)stroutBasicInfo, MINI_OVER);
+        menuChoice = InputI(0, 7);
+        Bdisp_PutDisp_DD();
+        if(menuChoice<=ex.nVariables && menuChoice!=EXIT_OPT)
+        {
+            if(!ex.nodes.its[itId]->idBasicVariables[menuChoice-1])
+            {
+                sprintf(stroutVariable, "Zj%d: %.2f. Cj-Zj: %.2f",menuChoice,
+                    ex.nodes.its[itId]->zj[menuChoice-1],ex.nodes.its[itId]->cjMinusZj[menuChoice-1]);
+            }else
+            {
+                sprintf(stroutVariable, "x%d: is a basic var",menuChoice);
+            }
+            PrintMini(0,14,(unsigned char*) stroutVariable,MINI_OVER);
+        }
+        PrintMini(0, 21, (unsigned char*)"Press any key to continue", MINI_OVER);
+        string_input(0, 28, uselessSring);
+        Bdisp_PutDisp_DD();
+        memset(stroutVariable,0,128);
+        
+    }
+    return 0;
+}
+
+int printIteration(int itId)
+{
+    char stroutTop[128],stroutTop2[128];
+    int menuChoice;
+    menuChoice=INITIALIZE_VALUE_OPT;
+    sprintf(stroutTop,"It %d.ZSol: %.2f Exit %d", itId,ex.nodes.its[itId]->zSol, EXIT_OPT);
+    sprintf(stroutTop2,"VarIn: %d, VarOut: %d. %s",ex.nodes.its[itId]->idVarIn,ex.nodes.its[itId]->idVarOut,ex.nodes.its[itId]->is2FasesActive ? "2fases": "");
+    while(menuChoice!=EXIT_OPT)
+    {
+        Bdisp_AllClr_DDVRAM();
+        
+        PrintMini(0,0,  (unsigned char *)stroutTop, MINI_OVER);
+        PrintMini(0,7,  (unsigned char *)stroutTop2, MINI_OVER);
+        PrintMini(0,14, (unsigned char*)"1 Binv. 2 xb. 3 ct", MINI_OVER);
+        PrintMini(0, 21, (unsigned char*)"4 CtBinv", MINI_OVER);
+        PrintMini(0, 28, (unsigned char*)"5 zj and cj-zj", MINI_OVER);
+        PrintMini(0, 35, (unsigned char*)"6 yj & xb/yj", MINI_OVER);
+        PrintMini(0, 42, (unsigned char*)"7 aj. 8 Cv", MINI_OVER);
+        PrintMini(0, 49, (unsigned char*)"9 basic vars B", MINI_OVER);
+        menuChoice = InputI(0, 56);
+        Bdisp_PutDisp_DD();
+        switch (menuChoice)
+        {
+            case 1: printBinvByIt(itId);break;
+            case 2: printXbByIt(itId);break;
+            case 3: printCtVecByIt(itId);break;
+            case 4: printCtBinvByIt(itId);break;
+            case 5: printZjAndCjMinusZj(itId);break;
+            case 6: printYandXbDivYByIt(itId);break;
+            case 7: printAjVec();break;
+            case 8: printCValuesByIt(itId);break;
+            case 9: printBasicVarsBbyIt(itId);break;
+            default: break;
+        }
+    }
+    return 0;
+}
+
 int printIts()
 {
+
+    char stroutTop[128],stroutBasicInfo[128],stroutBasicInfo2[128];
+    int menuChoice;
+    menuChoice=INITIALIZE_VALUE_OPT_ITS_MENU;
+    sprintf(stroutTop,"Its sel. Nits: %d. Exit %d", ex.nodes.nIterations, EXIT_OPT_ITS_MENU);
+
+    while(menuChoice!=EXIT_OPT_ITS_MENU)
+    {
+        Bdisp_AllClr_DDVRAM();
+        
+        PrintMini(0,0,  (unsigned char *)stroutTop, MINI_OVER);
+        menuChoice = InputI(0, 7);
+        Bdisp_PutDisp_DD();
+        if(menuChoice<=ex.nodes.nIterations && menuChoice!=EXIT_OPT_ITS_MENU)
+        {
+            printIteration(menuChoice);
+        }
+    }
     return 0;
 }
 
@@ -886,9 +1181,7 @@ struct problemStatement* getProblemInputs()
     PrintMini(0, 14, (unsigned char *)"NVariables?", MINI_OVER);
     Bdisp_PutDisp_DD();
     nVariables = InputI(0, 21);
-    PrintMini(0, 28, (unsigned char *)"Press. 1-LP, 2-ILP, 3-Cuts", MINI_OVER);
-    Bdisp_PutDisp_DD();
-    problemType = InputI(0, 35);
+    problemType = TYPE_LP;
     constraints = (float **)malloc(sizeof(float) * nConstraints);
     rightValues=calloc(nConstraints,sizeof(float));
     inequalitiesSigns = (int *) malloc(sizeof(int)*nConstraints);
@@ -1089,6 +1382,7 @@ int convertModel()
     modelToSolve->modelType=TYPE_SOLVE;
     ex.canonicalStatement=modelToSolve;
     ex.nVariables=modelToSolve->nVariables;
+    ex.nConstraints=modelToSolve->nConstraints;
     return 0;
 }
 
@@ -1278,17 +1572,19 @@ int initializeExecution()
 int AddIn_main(int isAppli, unsigned short OptionNum)
 {
     char str[128];
-    // selectExecutionMode();
+    selectExecutionMode();
     if(ex.mode==MODE_FULL_EXECUTION)
     {
-        ex.initialProblemStatement=createProblemStatementToDebug2Fases();
-        // ex.initialProblemStatement=getProblemInputs();
-        // Bdisp_AllClr_DDVRAM();
+        // ex.initialProblemStatement=createProblemStatementToDebug2Fases();
+        // 
+        // 
         // sprintf(str,"nSlope %d, N2F %d",ex.initialProblemStatement->nVariablesSlope,ex.initialProblemStatement->nVariables2fases);
         // PrintMini(0, 0, (unsigned char *)str, MINI_OVER);    
         // Bdisp_PutDisp_DD();
         // Sleep(3000);
-        // printStatementMenu(ex.initialProblemStatement);
+        Bdisp_AllClr_DDVRAM();
+        ex.initialProblemStatement=getProblemInputs();
+        printStatementMenu(ex.initialProblemStatement);
         convertModel(ex);
         printStatementMenu(ex.canonicalStatement);
         initializeExecution();

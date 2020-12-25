@@ -4,6 +4,7 @@
 File=C:\casioPr\simplexCasio\simplexC.c
 Line=1161
 Flags=00001012
+Sublevel=1
 
 [Breakpoint]
 File=C:\casioPr\simplexCasio\simplexC.c
@@ -15,6 +16,7 @@ Sublevel=1
 File=C:\casioPr\simplexCasio\simplexC.c
 Line=1142
 Flags=00001012
+Sublevel=1
 
 [Breakpoint]
 File=C:\casioPr\simplexCasio\simplexC.c
@@ -58,5 +60,47 @@ Line=1167
 Flags=00001012
 Sublevel=2
 
+[Breakpoint]
+File=C:\casioPr\simplexCasio\simplexC.c
+Line=1142
+Flags=00001012
+Sublevel=2
+
+[Breakpoint]
+File=C:\casioPr\simplexCasio\simplexC.c
+Line=810
+Flags=00001012
+Sublevel=1
+
+[Breakpoint]
+File=C:\casioPr\simplexCasio\simplexC.c
+Line=810
+Flags=00001012
+Sublevel=2
+
+[Breakpoint]
+File=C:\casioPr\simplexCasio\simplexC.c
+Line=816
+Flags=00001012
+Sublevel=1
+
+[Breakpoint]
+File=C:\casioPr\simplexCasio\simplexC.c
+Line=1161
+Flags=00001012
+Sublevel=2
+
+[Breakpoint]
+File=C:\casioPr\simplexCasio\simplexC.c
+Line=816
+Flags=00001012
+Sublevel=2
+
 [Watch]
 Name=zSol
+Name=menuChoice
+Name=ex.nodes.its[4]
+Name=ex.nodes.its[3]
+Name=ex.nodes.its[3]->yj[0]
+Name=ex.nodes.its[3]->yj[1]
+Name=ex.nodes.its[3]->yj[2]
