@@ -2,18 +2,19 @@
 
 [_1]
 Type=5
-Order=0
-Top=15
-Left=2235
+Order=1
+Top=45
+Left=9750
 Height=4740
-Width=5565
+Width=8100
 State=0
 Flags=00000020
+Setting=1175:27:simplexC.c
 OptionA=0
 
 [_2]
 Type=1
-Order=5
+Order=2
 Top=570
 Left=15810
 Height=4815
@@ -25,7 +26,7 @@ OptionB=15
 
 [_3]
 Type=6
-Order=2
+Order=4
 Top=5340
 Left=15915
 Height=6390
@@ -36,9 +37,9 @@ OptionA=0
 
 [_4]
 Type=7
-Order=4
-Top=4605
-Left=10110
+Order=6
+Top=5910
+Left=11115
 Height=3165
 Width=5565
 State=0
@@ -47,18 +48,18 @@ OptionA=0
 
 [_5]
 Type=8
-Order=3
+Order=5
 Top=7710
 Left=10095
-Height=3225
-Width=5580
+Height=4845
+Width=9330
 State=0
 Flags=00000000
 OptionA=0
 
 [_6]
 Type=3
-Order=9
+Order=11
 Top=0
 Left=10788
 Height=6348
@@ -69,7 +70,7 @@ OptionA=0
 
 [_7]
 Type=2
-Order=8
+Order=10
 Top=6348
 Left=7800
 Height=3588
@@ -91,23 +92,46 @@ OptionA=0
 
 [_9]
 Type=15
-Order=1
+Order=0
 Top=4725
 Left=2235
 Height=7830
-Width=6270
+Width=8820
 State=0
 Flags=00000000
 OptionA=0
 
+[_10]
+Type=9
+Order=8
+Top=1170
+Left=1170
+Height=8760
+Width=18150
+State=16
+Flags=00000020
+Setting=80000000:88022976:8802401D:solveSimplexLPOneFase:zSol
+OptionA=0
+
+[_11]
+Type=14
+Order=9
+Top=1950
+Left=1950
+Height=8760
+Width=18150
+State=16
+Flags=00000020
+OptionA=0
+
 [_32]
 Type=16
-Order=6
+Order=3
 Top=0
 Left=2205
 Height=4590
 Width=5595
 State=0
 Flags=00000020
-Setting=7:1:simplexC.c
+Setting=1141:1:simplexC.c
 OptionA=0

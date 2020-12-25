@@ -33,23 +33,26 @@
 struct iteration
 {
     int numIteration;
-    int* idBasicVariables;
-    int* idNoBasicVariables;
+    int* idBasicVariables;//1 si esa variable es Basica. 0 sera NoBasica
+    int *idByRowOfBasicVarsInBInv;//ejemplo [0]->2. la row 0 tiene asociala la variable 3
+    int isUnbounded;//1 en caso de si, 0 en caso de no
+
     int idVarIn;
     int idVarOut;
+    int indexVarOutInBInvMatrix;
 
-    double **Binv;
+    float **Binv;
     int BinvSize;
 
-    double *xb;
-    double *ct;
-    double *ctBinv;
-    double *zj;
-    double *cjMinusZj;
-    double *yj;
-    double *xbDivYj;
+    float *ct;
+    float *xb;
+    float *ctBinv;
+    float *zj;
+    float *cjMinusZj;
+    float *yj;
+    float *xbDivYj;
 
-    double zSol ;
+    float zSol ;
 };
 
 struct problemStatement
@@ -57,10 +60,12 @@ struct problemStatement
     int problemType;
     int modelType;
     int is2fasesNeeded;//1 en caso de si. 0 en caso que no
+    int is2fasesActive;//1 en caso de si. 0 en caso que no
+    
     //1 array de variables por cada constraint
     //Cada constraint tiene primero todas las variables input, luego todas las slope y finalmente las 2fases
-    double **constraints;
-    double *rightValues;
+    float **constraints;
+    float *rightValues;
     int *inequalitySigns;
     int nVariables;
     int nVariablesSlope;
@@ -74,10 +79,11 @@ struct problemStatement
     int *idConstraintTo2fasesVar;//Guarda la id de la variable que es 2fases perteneciante a esa contraint. -1 en caso de no tener
 
     int funcObjectivePurpose;
-    double *funcObjtValues;//Ultima posicion, termino independiente sin variables
-    double *funcObjtValues2Fases;
+    float *funcObjtValues;//Ultima posicion, termino independiente sin variables
+    float *funcObjtValues2Fases;
 
-    double** ajVector; // guarda un vector por cada variable y contiene su valor en todas las constraints.
+    float** ajVector; // guarda un vector por cada variable y contiene su valor en todas las constraints.
+    
 };
 
 struct node
@@ -92,15 +98,24 @@ struct execution
     int mode;
     struct problemStatement *initialProblemStatement;
     struct problemStatement *canonicalStatement;
-    struct node **nodes;
+    struct node nodes;
+    float *bVectorValues;//Right values;
+    float *inputCvectorValues;//Values of cost variable
+    float *fases2CvectorValues;
     int nNodes;
+    int currentFuncObjectivePurpose;
+    int nVariables;
+
+    float** ajVector; // guarda un vector por cada variable y contiene su valor en todas las constraints.
 };
 
-double InputD(int, int);
+struct execution ex;
+
+float InputD(int, int);
 
 int InputI(int, int);
 
-double InputD(int x, int y)
+float InputD(int x, int y)
 {
     char *string[128], *stopstring;
     string_input(x, y, string);
@@ -132,18 +147,21 @@ int freeMemoryStatement(struct problemStatement *pS)
     {
         free(pS->idConstraintTo2fasesVar);
         free(pS->idConstraintToSlopeVar);
-        for(i=0;pS->nVariables;i++)
-        {
-            free(pS->ajVector[i]);
-        }
-        free(pS->ajVector);
     }
     return 0;
 }
+
 int freeMemoryIteration(struct iteration *it)
 {
     //TODO
     free(it->idBasicVariables);
+    free(it->idByRowOfBasicVarsInBInv);
+    free(it->xb);
+    free(it->ctBinv);
+    free(it->zj);
+    free(it->cjMinusZj);
+    free(it->yj);
+    free(it->xbDivYj);
     return 0;
 }
 int freeMemoryNode(struct node *n)
@@ -153,22 +171,275 @@ int freeMemoryNode(struct node *n)
     {
         freeMemoryIteration(n->its[i]);
     }
+    free(n->its);
     return 0;
 }
 
-int freeMemoryExecution(struct execution *ex)
+int freeMemoryExecution()
 {
     int i;
-    if(ex->mode == MODE_FULL_EXECUTION)
+    if(ex.mode == MODE_FULL_EXECUTION)
     {
-        freeMemoryStatement(ex->initialProblemStatement);
-        freeMemoryStatement(ex->canonicalStatement);
+        freeMemoryStatement(ex.initialProblemStatement);
+        freeMemoryStatement(ex.canonicalStatement);
     }
-    for(i=0;i<ex->nNodes;i++)
+    for(i=0;i<ex.nVariables;i++)
     {
-        freeMemoryNode(ex->nodes[i]);
+        // free(ex.ajVector[i]);
     }
+    // free(ex.ajVector);
+    free(ex.bVectorValues);
+    free(ex.inputCvectorValues);
+    free(ex.fases2CvectorValues);
     return 0;
+}
+
+float* calculateVectorMatrixrMul(int size, float **M, float *V)
+{
+    float *res;
+    int i,j;
+    res = calloc(size,sizeof(float));
+    for(i=0;i<size;i++)
+    {
+        for(j=0;j<size;j++)
+        {
+            res[i]+=V[j]*M[j][i];
+        }
+    }
+    return res;
+}
+
+float* calculateMatrixVectorMul(int size, float **M, float *V)
+{
+    float *res;
+    int i,j;
+    res = calloc(size,sizeof(float*));
+    for(i=0;i<size;i++)
+    {
+        for(j=0;j<size;j++)
+        {
+            res[i]+=M[i][j]*V[j];
+        }
+    }
+    return res;
+}
+
+float calculateVectorDotProduct(int size, float* A, float *B)
+{
+    float res;
+    int i;
+    res=0;
+    for(i=0;i<size;i++)
+    {
+        res+=A[i]*B[i];
+    }
+    return res;
+}
+
+float* getCurrentCvectorValues(struct iteration *it)
+{
+    float* res;
+    res = calloc(ex.nVariables,sizeof(float));
+    if(ex.mode==MODE_FULL_EXECUTION && ex.canonicalStatement->is2fasesNeeded && ex.canonicalStatement->is2fasesActive)
+    {
+        res= ex.fases2CvectorValues;
+    }else
+    {
+        res=ex.inputCvectorValues;
+    }
+    return res;
+}
+
+float* getCurrentCt(struct iteration *it)
+{
+    float* res;
+    int i;
+    res = calloc(it->BinvSize,sizeof(float));
+    
+    for(i=0;i<it->BinvSize;i++)
+    {
+        if(ex.mode==MODE_FULL_EXECUTION && ex.canonicalStatement->is2fasesNeeded && ex.canonicalStatement->is2fasesActive)
+        {
+            res[i]= ex.fases2CvectorValues[it->idByRowOfBasicVarsInBInv[i]];
+        }else
+        {
+            res[i]=ex.inputCvectorValues[it->idByRowOfBasicVarsInBInv[i]];
+        }
+    }
+    
+    return res;
+}
+
+float** calculateNewBinv(struct iteration *oldIt)
+{
+    float **res;
+    int i,j,indexPivot;
+    indexPivot=-1;
+    res=calloc(oldIt->BinvSize,sizeof(float*));
+    for(i=0;i<oldIt->BinvSize;i++)
+    {
+        res[i]=calloc(oldIt->BinvSize,sizeof(float));
+        if(oldIt->idVarOut==oldIt->idByRowOfBasicVarsInBInv[i])
+        {
+            indexPivot=i;
+        }
+    }
+    //Calculo de la fila pivote
+    for(i=0;i<oldIt->BinvSize;i++)
+    {
+        res[indexPivot][i]=oldIt->Binv[indexPivot][i]/oldIt->yj[indexPivot];
+    }
+
+    //Calculo del resto de filas
+    for(i=0;i<oldIt->BinvSize;i++)
+    {
+        for(j=0;j<oldIt->BinvSize && i!=indexPivot;j++)
+        {
+            res[i][j]=oldIt->Binv[i][j]-(oldIt->yj[i]*res[indexPivot][j]);
+        }
+    }
+    return res;
+}
+
+struct iteration* createNewIteration(struct iteration *oldIt)
+{
+    struct iteration *newIt;
+    int i;
+    newIt = malloc(sizeof(struct iteration));
+    newIt->numIteration=oldIt->numIteration+1;
+    newIt->BinvSize=oldIt->BinvSize;
+    newIt->Binv=calculateNewBinv(oldIt);
+    newIt->idBasicVariables=calloc(ex.nVariables,sizeof(int));
+    newIt->idByRowOfBasicVarsInBInv=calloc(newIt->BinvSize,sizeof(int));
+    for(i=0;i<ex.nVariables;i++)
+    {
+        newIt->idBasicVariables[i]=oldIt->idBasicVariables[i];
+    }
+    for(i=0;i<oldIt->BinvSize;i++)
+    {
+        if(oldIt->idByRowOfBasicVarsInBInv[i]!=oldIt->idVarOut)
+        {
+            newIt->idByRowOfBasicVarsInBInv[i]=oldIt->idByRowOfBasicVarsInBInv[i];
+        }else
+        {
+            newIt->idByRowOfBasicVarsInBInv[i]=oldIt->idVarIn;
+        }
+    }
+    newIt->idBasicVariables[oldIt->idVarOut]=0;
+    newIt->idBasicVariables[oldIt->idVarIn]=1;
+    return newIt;
+}
+
+int calculateIteration(struct iteration *it)
+{
+    int i;
+    float * cVectorValues,*ct;
+    float bestEntryVarValue,bestExitVarValue;
+    cVectorValues=getCurrentCvectorValues(it);
+    ct=getCurrentCt(it);
+    it->ct=ct;
+    it->xb=calculateMatrixVectorMul(it->BinvSize,it->Binv,ex.bVectorValues);
+    it->ctBinv=calculateVectorMatrixrMul(it->BinvSize,it->Binv,ct);
+    it->zSol=calculateVectorDotProduct(it->BinvSize,ct,it->xb);
+    //Calculate values for zj and cj-zj and idVarIn
+    it->zj=calloc(ex.nVariables,sizeof(float));
+    it->cjMinusZj=calloc(ex.nVariables,sizeof(float));
+    it->idVarIn=-1;
+    if(ex.currentFuncObjectivePurpose==FUNC_MAXIMIZE)
+    {
+        bestEntryVarValue=INT_MIN;
+    }else
+    {
+        bestEntryVarValue=INT_MAX;
+    }
+    
+    
+    for(i=0;i<ex.nVariables;i++)
+    {
+        if((!it->idBasicVariables[i] && ex.canonicalStatement->is2fasesActive) ||
+            (!it->idBasicVariables[i] && !ex.canonicalStatement->is2fasesActive && !ex.canonicalStatement->id2fasesVariables[i]) )
+        {
+            it->zj[i]=calculateVectorDotProduct(it->BinvSize,it->ctBinv,ex.ajVector[i]);
+            it->cjMinusZj[i]=cVectorValues[i]-it->zj[i];
+
+            if(ex.currentFuncObjectivePurpose==FUNC_MINIMIZE && it->cjMinusZj[i]<0 && it->cjMinusZj[i]<bestEntryVarValue )
+            {
+                bestEntryVarValue=it->cjMinusZj[i];
+                it->idVarIn=i;
+            }else if(ex.currentFuncObjectivePurpose==FUNC_MAXIMIZE && it->cjMinusZj[i]>0 && it->cjMinusZj[i]>bestEntryVarValue )
+            {
+                bestEntryVarValue=it->cjMinusZj[i];
+                it->idVarIn=i;
+            }
+        }
+    }
+    if(it->idVarIn!=-1)//Check optimum criteria
+    {
+        //Calculate yj
+        it->yj=calculateMatrixVectorMul(it->BinvSize,it->Binv,ex.ajVector[it->idVarIn]);
+        it->xbDivYj= calloc(it->BinvSize,sizeof(float));
+        bestExitVarValue=INT_MAX;
+        it->indexVarOutInBInvMatrix=-1;
+        it->isUnbounded=1;
+        for(i=0;i<it->BinvSize;i++)
+        {
+            if(it->yj[i]!=0)
+            {
+                it->xbDivYj[i]=it->xb[i]/it->yj[i];
+                if(it->xbDivYj[i]>0 && it->xbDivYj[i]<bestExitVarValue)
+                {
+                    it->indexVarOutInBInvMatrix=i;
+                    bestExitVarValue=it->xbDivYj[i];
+                    it->isUnbounded=0;
+                }else if(it->xbDivYj[i]<0)
+                {
+                    it->xbDivYj[i]=NO_EVAL_VALUE;
+                }
+                
+            }else
+            {
+                it->xbDivYj[i]=NO_EVAL_VALUE;
+            }
+            
+        }
+        if(!it->isUnbounded)
+        {
+            it->idVarOut=it->idByRowOfBasicVarsInBInv[it->indexVarOutInBInvMatrix];
+        }
+        
+    }
+    
+}
+
+struct iteration* modelToIteration(struct problemStatement *pS)
+{
+    struct iteration *it;
+    int i;
+    it = malloc(sizeof(struct iteration));
+    it->numIteration=0;
+    //Matriz B-1
+    it->BinvSize=pS->nConstraints;
+    it->Binv=calloc(it->BinvSize,sizeof(float));
+    for(i=0;i<it->BinvSize;i++)
+    {
+        it->Binv[i]=calloc(it->BinvSize,sizeof(float));
+        it->Binv[i][i]=1;
+    }
+    it->idBasicVariables=calloc(pS->nVariables,sizeof(int));
+    it->idByRowOfBasicVarsInBInv=calloc(it->BinvSize,sizeof(int));
+    for(i=0;i<it->BinvSize;i++)
+    {
+        if(pS->idConstraintTo2fasesVar[i]>0)
+        {
+            it->idByRowOfBasicVarsInBInv[i]=pS->idConstraintTo2fasesVar[i];
+            it->idBasicVariables[pS->idConstraintTo2fasesVar[i]]=1;
+        }else if(pS->idConstraintToSlopeVar[i]>0)
+        {
+            it->idByRowOfBasicVarsInBInv[i]=pS->idConstraintToSlopeVar[i];
+            it->idBasicVariables[pS->idConstraintToSlopeVar[i]]=1;
+        }
+    }
+    return it;
 }
 
 int lengthConcatenate(int sprintLength)
@@ -477,10 +748,10 @@ int getInequalitySign(int nConstraint, int *nVariablesSlope, int * nVariables2fa
     return res;
 }
 
-double getRightValue(int nConstraint)
+float getRightValue(int nConstraint)
 {   
     char strout[128];
-    double res;
+    float res;
     Bdisp_AllClr_DDVRAM();
     sprintf(strout, "Constraint: %d, Right Value", nConstraint);
     PrintMini(0, 0, (unsigned char *)strout, MINI_OVER);
@@ -489,12 +760,12 @@ double getRightValue(int nConstraint)
     return res;
 }
 
-double *getInequation(unsigned int nVariables, int nConstraint, int *inequalitySign, double *rightValue, int *nVariablesSlope, int * nVariables2fases)
+float *getInequation(unsigned int nVariables, int nConstraint, int *inequalitySign, float *rightValue, int *nVariablesSlope, int * nVariables2fases)
 {
     char strout[128];
     unsigned int i;
-    double *constraintValues;
-    constraintValues = (double *)malloc(sizeof(double) * nVariables);
+    float *constraintValues;
+    constraintValues = (float *)malloc(sizeof(float) * nVariables);
     for (i = 0; i < nVariables; i++)
     {
         Bdisp_AllClr_DDVRAM();
@@ -516,9 +787,9 @@ struct problemStatement* getProblemInputs()
     unsigned int i;
     int nVariablesInteger;
     int problemType;
-    double **constraints;
-    double *rightValues;
-    double *funcObjtValues;
+    float **constraints;
+    float *rightValues;
+    float *funcObjtValues;
     int *inequalitiesSigns;
     int *idIntegerVariables;
     int *idSlopeVariables;
@@ -536,10 +807,10 @@ struct problemStatement* getProblemInputs()
     PrintMini(0, 28, (unsigned char *)"Press. 1-LP, 2-ILP, 3-Cuts", MINI_OVER);
     Bdisp_PutDisp_DD();
     problemType = InputI(0, 35);
-    constraints = (double **)malloc(sizeof(double) * nConstraints);
-    rightValues = (double *) malloc(sizeof(double)*nConstraints);
+    constraints = (float **)malloc(sizeof(float) * nConstraints);
+    rightValues=calloc(nConstraints,sizeof(float));
     inequalitiesSigns = (int *) malloc(sizeof(int)*nConstraints);
-    funcObjtValues = calloc(nVariables+1,sizeof(double));
+    funcObjtValues = calloc(nVariables+1,sizeof(float));
     idIntegerVariables = calloc(nVariables,sizeof(int));
     idSlopeVariables = calloc(nVariables,sizeof(int));
     id2fasesVariables = calloc(nVariables,sizeof(int));
@@ -603,52 +874,50 @@ struct problemStatement* getProblemInputs()
     return pInput;
 }
 
-struct execution* selectExecutionMode()
+int selectExecutionMode()
 {
     char strout[128];
-    struct execution *ex;
-    ex = malloc(sizeof(struct execution));
     Bdisp_AllClr_DDVRAM();
     sprintf(strout,"Mode. Full %d, Table %d",MODE_FULL_EXECUTION,MODE_INPUT_TABLE);
     PrintMini(0, 0, (unsigned char *)strout, MINI_OVER);
-    ex->mode = InputI(0, 7);
+    ex.mode = InputI(0, 7);
     Bdisp_PutDisp_DD();
-    ex->nNodes=0;
-    return ex;
+    ex.nNodes=0;
+    return 0;
 }
 
-struct problemStatement* convertModel(struct problemStatement* pInput)
+int convertModel()
 {
     int i,j,nextConstraintSlopeSet,nextConstraint2fasesSet;
     struct problemStatement *modelToSolve;
     nextConstraint2fasesSet=0;nextConstraintSlopeSet=0;
     modelToSolve = malloc(sizeof(struct problemStatement));
-    modelToSolve->problemType=pInput->problemType;
-    modelToSolve->nVariablesSlope=pInput->nVariablesSlope;
-    modelToSolve->nVariables2fases=pInput->nVariables2fases;
-    modelToSolve->nVariablesInteger=pInput->nVariablesInteger;
-    modelToSolve->nConstraints=pInput->nConstraints;
-    modelToSolve->funcObjectivePurpose=pInput->funcObjectivePurpose;
-    modelToSolve->is2fasesNeeded=pInput->is2fasesNeeded;
-    modelToSolve->nVariables=pInput->nVariables+pInput->nVariablesSlope+pInput->nVariables2fases;
-    modelToSolve->funcObjtValues=calloc(modelToSolve->nVariables+1,sizeof(double));
+    modelToSolve->problemType=ex.initialProblemStatement->problemType;
+    modelToSolve->nVariablesSlope=ex.initialProblemStatement->nVariablesSlope;
+    modelToSolve->nVariables2fases=ex.initialProblemStatement->nVariables2fases;
+    modelToSolve->nVariablesInteger=ex.initialProblemStatement->nVariablesInteger;
+    modelToSolve->nConstraints=ex.initialProblemStatement->nConstraints;
+    modelToSolve->funcObjectivePurpose=ex.initialProblemStatement->funcObjectivePurpose;
+    modelToSolve->is2fasesNeeded=ex.initialProblemStatement->is2fasesNeeded;
+    modelToSolve->nVariables=ex.initialProblemStatement->nVariables+ex.initialProblemStatement->nVariablesSlope+ex.initialProblemStatement->nVariables2fases;
+    modelToSolve->funcObjtValues=calloc(modelToSolve->nVariables+1,sizeof(float));
     if(modelToSolve->is2fasesNeeded)
     {
-        modelToSolve->funcObjtValues2Fases=calloc(modelToSolve->nVariables+1,sizeof(double));
+        modelToSolve->funcObjtValues2Fases=calloc(modelToSolve->nVariables+1,sizeof(float));
     }
     modelToSolve->idSlopeVariables=calloc(modelToSolve->nVariables,sizeof(int));
     modelToSolve->id2fasesVariables=calloc(modelToSolve->nVariables,sizeof(int));
     modelToSolve->idConstraintToSlopeVar=calloc(modelToSolve->nConstraints,sizeof(int));
     modelToSolve->idConstraintTo2fasesVar=calloc(modelToSolve->nConstraints,sizeof(int));
-    memset(modelToSolve->idConstraintTo2fasesVar,-1,modelToSolve->nConstraints);
-    memset(modelToSolve->idConstraintToSlopeVar,-1,modelToSolve->nConstraints);
+    memset(modelToSolve->idConstraintTo2fasesVar,-1,sizeof(modelToSolve->idConstraintTo2fasesVar));
+    memset(modelToSolve->idConstraintToSlopeVar,-1,sizeof(modelToSolve->idConstraintToSlopeVar));
     //SET ID TYPES OF VARIABLES
     for(i=0;i<modelToSolve->nVariables;i++)
     {
-        if(i>=pInput->nVariables && i<pInput->nVariables+pInput->nVariablesSlope)
+        if(i>=ex.initialProblemStatement->nVariables && i<ex.initialProblemStatement->nVariables+ex.initialProblemStatement->nVariablesSlope)
         {
             modelToSolve->idSlopeVariables[i]=1;
-        }else if(i>=pInput->nVariables+pInput->nVariablesSlope)
+        }else if(i>=ex.initialProblemStatement->nVariables+ex.initialProblemStatement->nVariablesSlope)
         {
             modelToSolve->id2fasesVariables[i]=1;
         }
@@ -660,7 +929,7 @@ struct problemStatement* convertModel(struct problemStatement* pInput)
         {
             for(j=nextConstraintSlopeSet;j<modelToSolve->nConstraints;j++)
             {
-                if(pInput->inequalitySigns[j]==INE_LESS_OR_EQUAL_THAN ||pInput->inequalitySigns[j]==INE_GREATER_OR_EQUAL_THAN)
+                if(ex.initialProblemStatement->inequalitySigns[j]==INE_LESS_OR_EQUAL_THAN ||ex.initialProblemStatement->inequalitySigns[j]==INE_GREATER_OR_EQUAL_THAN)
                 {
                     modelToSolve->idConstraintToSlopeVar[j]=i;
                     nextConstraintSlopeSet=j+1;
@@ -672,7 +941,7 @@ struct problemStatement* convertModel(struct problemStatement* pInput)
         {
             for(j=nextConstraint2fasesSet;j<modelToSolve->nConstraints;j++)
             {
-                if(pInput->inequalitySigns[j]==INE_EQUAL ||pInput->inequalitySigns[j]==INE_GREATER_OR_EQUAL_THAN)
+                if(ex.initialProblemStatement->inequalitySigns[j]==INE_EQUAL ||ex.initialProblemStatement->inequalitySigns[j]==INE_GREATER_OR_EQUAL_THAN)
                 {
                     modelToSolve->idConstraintTo2fasesVar[j]=i;
                     nextConstraint2fasesSet=j+1;
@@ -682,80 +951,272 @@ struct problemStatement* convertModel(struct problemStatement* pInput)
         }
     }
     //MODIFY THE CONSTRAINTS and copy right values
-    modelToSolve->constraints=(double **)malloc(sizeof(double) * modelToSolve->nConstraints);
-    modelToSolve->rightValues=calloc(modelToSolve->nConstraints,sizeof(double));
+    modelToSolve->constraints=(float **)malloc(sizeof(float) * modelToSolve->nConstraints);
+    modelToSolve->rightValues=calloc(modelToSolve->nConstraints,sizeof(float));
     modelToSolve->inequalitySigns=calloc(modelToSolve->nConstraints,sizeof(int));
     modelToSolve->idIntegerVariables=calloc(modelToSolve->nVariables,sizeof(int));
 
     for(i=0;i<modelToSolve->nConstraints;i++)
     {
-        modelToSolve->constraints[i]=calloc(modelToSolve->nVariables,sizeof(double));
+        modelToSolve->constraints[i]=calloc(modelToSolve->nVariables,sizeof(float));
         for(j=0;j<modelToSolve->nVariables;j++)
         {
-            if(j<pInput->nVariables)//Copiar variables de entrada
+            if(j<ex.initialProblemStatement->nVariables)//Copiar variables de entrada
             {
-                modelToSolve->constraints[i][j]=pInput->constraints[i][j];
-                modelToSolve->idIntegerVariables[i]=pInput->idIntegerVariables[i];
-            }else if(pInput->inequalitySigns[i]==INE_LESS_OR_EQUAL_THAN && j==modelToSolve->idConstraintToSlopeVar[i])
+                modelToSolve->constraints[i][j]=ex.initialProblemStatement->constraints[i][j];
+                modelToSolve->idIntegerVariables[i]=ex.initialProblemStatement->idIntegerVariables[i];
+            }else if(ex.initialProblemStatement->inequalitySigns[i]==INE_LESS_OR_EQUAL_THAN && j==modelToSolve->idConstraintToSlopeVar[i])
             {
                 modelToSolve->constraints[i][j]=1;
-            }else if(pInput->inequalitySigns[i]==INE_GREATER_OR_EQUAL_THAN && j==modelToSolve->idConstraintToSlopeVar[i])
+            }else if(ex.initialProblemStatement->inequalitySigns[i]==INE_GREATER_OR_EQUAL_THAN && j==modelToSolve->idConstraintToSlopeVar[i])
             {
                 modelToSolve->constraints[i][j]=-1;
-            }else if((pInput->inequalitySigns[i]==INE_GREATER_OR_EQUAL_THAN || pInput->inequalitySigns[i]==INE_EQUAL)&& j==modelToSolve->idConstraintTo2fasesVar[i])
+            }else if((ex.initialProblemStatement->inequalitySigns[i]==INE_GREATER_OR_EQUAL_THAN || ex.initialProblemStatement->inequalitySigns[i]==INE_EQUAL)&& j==modelToSolve->idConstraintTo2fasesVar[i])
             {
                 modelToSolve->constraints[i][j]=1;
             }
             //Cualquier otro caso tiene un 0 por calloc
         }
-        modelToSolve->rightValues[i]=pInput->rightValues[i];
+        modelToSolve->rightValues[i]=ex.initialProblemStatement->rightValues[i];
     }
 
     //Create new obj funct
     for(i=0;i<modelToSolve->nVariables;i++)
     {
-        if(i<pInput->nVariables)
+        if(i<ex.initialProblemStatement->nVariables)
         {
-            modelToSolve->funcObjtValues[i]=pInput->funcObjtValues[i];
-        }else if(i>=(pInput->nVariables+pInput->nVariablesSlope))
+            modelToSolve->funcObjtValues[i]=ex.initialProblemStatement->funcObjtValues[i];
+        }else if(i>=(ex.initialProblemStatement->nVariables+ex.initialProblemStatement->nVariablesSlope))
         {
             modelToSolve->funcObjtValues2Fases[i]=1;
         }
     }
 
     //Create aj vectors
-    modelToSolve->ajVector=calloc(modelToSolve->nVariables,sizeof(double));
+    ex.ajVector=calloc(modelToSolve->nVariables,sizeof(float*));
     for(i=0;i<modelToSolve->nVariables;i++)
     {
-        modelToSolve->ajVector[i]=calloc(modelToSolve->nConstraints,sizeof(double));
+        ex.ajVector[i]=calloc(modelToSolve->nConstraints,sizeof(float));
         for(j=0;j<modelToSolve->nConstraints;j++)
         {
-            modelToSolve->ajVector[i][j]=modelToSolve->constraints[j][i];
+            ex.ajVector[i][j]=modelToSolve->constraints[j][i];
         }
     }
-
-    modelToSolve->funcObjtValues[modelToSolve->nVariables]=pInput->funcObjtValues[pInput->nVariables];
+    modelToSolve->ajVector=ex.ajVector;
+    modelToSolve->funcObjtValues[modelToSolve->nVariables]=ex.initialProblemStatement->funcObjtValues[ex.initialProblemStatement->nVariables];
     modelToSolve->modelType=TYPE_SOLVE;
-    return modelToSolve;
+    ex.canonicalStatement=modelToSolve;
+    ex.nVariables=modelToSolve->nVariables;
+    return 0;
+}
+
+struct problemStatement* createProblemStatementToDebug2Fases()
+{
+    struct problemStatement *res;
+    int nConstraints;
+    int nVariables;
+    nConstraints=3;
+    nVariables=2;
+    res= malloc(sizeof(struct problemStatement));
+    res->modelType=TYPE_INPUT;
+    res->nConstraints=nConstraints;
+    res->nVariables=nVariables;
+    res->nVariables2fases=1;
+    res ->nVariablesSlope=2;
+    res->problemType=TYPE_LP;
+    res -> funcObjtValues = calloc(nVariables+1,sizeof(float));
+    res->idIntegerVariables=calloc(nVariables,sizeof(int));
+    res->idSlopeVariables= calloc(nVariables,sizeof(int));
+    res->id2fasesVariables=calloc(nVariables,sizeof(int));
+    res->inequalitySigns=calloc(nConstraints,sizeof(int));
+    res->inequalitySigns[0]=INE_LESS_OR_EQUAL_THAN;
+    res->inequalitySigns[1]=INE_LESS_OR_EQUAL_THAN;
+    res->inequalitySigns[2]=INE_EQUAL;
+    res->funcObjectivePurpose=FUNC_MAXIMIZE;
+    res->funcObjtValues[0]=3;
+    res->funcObjtValues[1]=5;
+    res->funcObjtValues[2]=0;
+    res->constraints=calloc(nConstraints,sizeof(float));
+    res->constraints[0]=calloc(nVariables,sizeof(float));
+    res->constraints[1]=calloc(nVariables,sizeof(float));
+    res->constraints[2]=calloc(nVariables,sizeof(float));
+    res->constraints[0][0]=1;
+    res->constraints[0][1]=0;
+    res->constraints[1][0]=0;
+    res->constraints[1][1]=2;
+    res->constraints[2][0]=3;
+    res->constraints[2][1]=2;
+    res->rightValues=calloc(nConstraints,sizeof(float));
+    res->rightValues[0]=4;
+    res->rightValues[1]=12;
+    res->rightValues[2]=18;
+    res->nVariables2fases=1;
+    res->is2fasesNeeded=1;
+
+    return res;
+}
+
+struct problemStatement* createProblemStatementToDebug()
+{
+    struct problemStatement *res;
+    int nConstraints;
+    int nVariables;
+    nConstraints=3;
+    nVariables=2;
+    res= malloc(sizeof(struct problemStatement));
+    res->modelType=TYPE_INPUT;
+    res->nConstraints=nConstraints;
+    res->nVariables=nVariables;
+    res->nVariables2fases=0;
+    res ->nVariablesSlope=3;
+    res->problemType=TYPE_LP;
+    res -> funcObjtValues = calloc(nVariables+1,sizeof(float));
+    res->idIntegerVariables=calloc(nVariables,sizeof(int));
+    res->idSlopeVariables= calloc(nVariables,sizeof(int));
+    res->id2fasesVariables=calloc(nVariables,sizeof(int));
+    res->inequalitySigns=calloc(nConstraints,sizeof(int));
+    res->funcObjectivePurpose=FUNC_MINIMIZE;
+    res->funcObjtValues[0]=-4;
+    res->funcObjtValues[1]=-6;
+    res->funcObjtValues[2]=0;
+    res->constraints=calloc(nConstraints,sizeof(float));
+    res->constraints[0]=calloc(nVariables,sizeof(float));
+    res->constraints[1]=calloc(nVariables,sizeof(float));
+    res->constraints[2]=calloc(nVariables,sizeof(float));
+    res->constraints[0][0]=-1;
+    res->constraints[0][1]=1;
+    res->constraints[1][0]=1;
+    res->constraints[1][1]=1;
+    res->constraints[2][0]=2;
+    res->constraints[2][1]=5;
+    res->inequalitySigns[0]=INE_LESS_OR_EQUAL_THAN;
+    res->inequalitySigns[1]=INE_LESS_OR_EQUAL_THAN;
+    res->inequalitySigns[2]=INE_LESS_OR_EQUAL_THAN;
+    res->rightValues=calloc(nConstraints,sizeof(float));
+    res->rightValues[0]=11;
+    res->rightValues[1]=27;
+    res->rightValues[2]=90;
+    res->nVariables2fases=0;
+    res->is2fasesNeeded=0;
+
+    return res;
+}
+
+struct iteration *convertToSecondPhase(int nodeId, int firsItId)
+{
+    int i,j;
+    struct iteration *it,*originalIt;
+    originalIt=ex.nodes.its[firsItId];
+    it = malloc(sizeof(struct iteration));
+    it->BinvSize=originalIt->BinvSize;
+    it->Binv=calloc(it->BinvSize,sizeof(float));
+    for(i=0;i<it->BinvSize;i++)
+    {
+        it->Binv[i]=calloc(it->BinvSize,sizeof(float));
+        for(j=0;j<it->BinvSize;j++)
+        {
+            it->Binv[i][j]=originalIt->Binv[i][j];
+        }
+        
+    }
+    it->idBasicVariables=calloc(ex.nVariables,sizeof(int));
+    it->idByRowOfBasicVarsInBInv=calloc(it->BinvSize,sizeof(int));
+    for(i=0;i<it->BinvSize;i++)
+    {
+        it->idByRowOfBasicVarsInBInv[i]=originalIt->idByRowOfBasicVarsInBInv[i];
+    }
+    for(i=0;i<ex.nVariables;i++)
+    {
+        it->idBasicVariables[i]=originalIt->idBasicVariables[i];
+    }
+    return it;
+}
+
+int solveSimplexLPOneFase(int nodeId, int firsItId)
+{
+    int itId, nId;
+    float zSol;
+    itId=firsItId;
+    ex.nodes.its[itId]->numIteration=itId;
+    while(ex.nodes.its[itId]->idVarIn!=-1 && ex.nodes.its[itId]->idVarOut!=-1)
+    {
+        calculateIteration(ex.nodes.its[itId]);
+        if(ex.nodes.its[itId]->idVarIn!=-1 && ex.nodes.its[itId]->idVarOut!=-1){
+            ex.nodes.its[itId+1]=createNewIteration(ex.nodes.its[itId]);
+            zSol= ex.nodes.its[itId]->zSol;
+	        itId++;
+        }
+            
+    }
+    return itId;
+}
+
+int solveSimplexLP(int nodeId)
+{
+    int itId,lastItId;
+    char strSol[128];
+    itId=0;
+    ex.nodes.id=nodeId;
+    ex.nodes.its=malloc(10*sizeof(struct iteration*));
+    ex.nodes.its[0]=modelToIteration(ex.canonicalStatement);
+    if(ex.canonicalStatement->is2fasesActive)
+    {
+        lastItId=solveSimplexLPOneFase(nodeId, 0);
+        ex.currentFuncObjectivePurpose=ex.canonicalStatement->funcObjectivePurpose;//CAMBIAR
+        //NO SE SI HACE FALTA MAS
+        ex.canonicalStatement->is2fasesActive=0;
+        ex.nodes.its[lastItId+1]=convertToSecondPhase(nodeId, lastItId);
+        lastItId=solveSimplexLPOneFase(nodeId, lastItId+1);
+    }else
+    {
+        lastItId=solveSimplexLPOneFase(nodeId, 0);
+    }
+    sprintf(strSol,"ZSol: %.2f",ex.nodes.its[lastItId]->zSol);
+    Bdisp_AllClr_DDVRAM();
+    PrintMini(0,0,(unsigned char*)strSol,MINI_OVER);
+    Bdisp_PutDisp_DD();
+    Sleep(3000);
+
+    return 0;
+}
+
+
+int initializeExecution()
+{
+    ex.bVectorValues=ex.canonicalStatement->rightValues;
+    if(ex.canonicalStatement->is2fasesNeeded)
+    {
+        ex.canonicalStatement->is2fasesActive=1;
+        ex.currentFuncObjectivePurpose=FUNC_MINIMIZE;
+    }else
+    {
+        ex.currentFuncObjectivePurpose=ex.canonicalStatement->funcObjectivePurpose;
+    }
+    ex.inputCvectorValues=ex.canonicalStatement->funcObjtValues;
+    ex.fases2CvectorValues=ex.canonicalStatement->funcObjtValues2Fases;
+    return 0;
 }
 
 int AddIn_main(int isAppli, unsigned short OptionNum)
 {
     char str[128];
-    struct execution *ex;
-    ex = selectExecutionMode();
-    if(ex->mode==MODE_FULL_EXECUTION)
+    selectExecutionMode();
+    if(ex.mode==MODE_FULL_EXECUTION)
     {
-        ex->initialProblemStatement=getProblemInputs();
-        Bdisp_AllClr_DDVRAM();
-        sprintf(str,"nSlope %d, N2F %d",ex->initialProblemStatement->nVariablesSlope,ex->initialProblemStatement->nVariables2fases);
-        PrintMini(0, 0, (unsigned char *)str, MINI_OVER);    
-        Bdisp_PutDisp_DD();
-        Sleep(3000);
-        printStatementMenu(ex->initialProblemStatement);
-        ex->canonicalStatement=convertModel(ex->initialProblemStatement);
-        printStatementMenu(ex->canonicalStatement);
-    }else if(ex->mode==MODE_INPUT_TABLE)
+        // ex.initialProblemStatement=createProblemStatementToDebug2Fases();
+        ex.initialProblemStatement=getProblemInputs();
+        // Bdisp_AllClr_DDVRAM();
+        // sprintf(str,"nSlope %d, N2F %d",ex.initialProblemStatement->nVariablesSlope,ex.initialProblemStatement->nVariables2fases);
+        // PrintMini(0, 0, (unsigned char *)str, MINI_OVER);    
+        // Bdisp_PutDisp_DD();
+        // Sleep(3000);
+        printStatementMenu(ex.initialProblemStatement);
+        convertModel(ex);
+        printStatementMenu(ex.canonicalStatement);
+        initializeExecution();
+        solveSimplexLP(0);
+
+    }else if(ex.mode==MODE_INPUT_TABLE)
     {
         //TODO
     }else
