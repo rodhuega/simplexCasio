@@ -564,48 +564,6 @@ int printAjVec(struct problemStatement* pS)
     return 0;
 }
 
-int printStatementMenu(struct problemStatement* pS)
-{
-    char stroutTop[128],stroutBasicInfo[128],stroutObjInfo[128];
-    int menuChoice;
-    menuChoice=INITIALIZE_VALUE_OPT;
-    sprintf(stroutTop,"Problem statement %s, printMenu. Exit %d",(pS->modelType==TYPE_INPUT) ? "INPUT" :"SOLVE", EXIT_OPT);
-    sprintf(stroutBasicInfo, "NConstraints: %d, NVariables: %d", pS->nConstraints, pS->nVariables);
-
-    if(pS->modelType==TYPE_SOLVE && pS->is2fasesNeeded)
-    {
-        sprintf(stroutObjInfo,"2 Pinfo obj func. 3 Pinfo 2fases");
-    }else
-    {
-        sprintf(stroutObjInfo,"2 Pinfo obj func.");
-    }
-    
-    while(menuChoice!=EXIT_OPT)
-    {
-        Bdisp_AllClr_DDVRAM();
-        
-        PrintMini(0,0,  (unsigned char *)stroutTop, MINI_OVER);
-        PrintMini(0,7,  (unsigned char *)stroutBasicInfo, MINI_OVER);
-        PrintMini(0, 14, (unsigned char*)"1 Pinfo constraint", MINI_OVER);
-        PrintMini(0, 21, (unsigned char*)stroutObjInfo, MINI_OVER);
-        if(pS->modelType==TYPE_SOLVE)
-        {
-            PrintMini(0, 28, (unsigned char*)"4 Pinfo aj vec", MINI_OVER);
-        }
-        menuChoice = InputI(0, 35);
-        Bdisp_PutDisp_DD();
-        switch (menuChoice)
-        {
-        case 1: printAllConstraintsMenu(pS);break;
-        case 2: printObjFunc(pS,TYPE_INPUT);break;
-        case 3: if(pS->modelType==TYPE_SOLVE){printObjFunc(pS,TYPE_SOLVE);};break;
-        case 4: if(pS->modelType==TYPE_SOLVE){printAjVec(pS);};break;
-        default: break;
-        }
-    }
-    return 0;
-}
-
 int printVariablesProblemStatement(int contsId, struct problemStatement* pS)
 {
     char stroutBasicInfo[128],stroutVariable[128];
@@ -721,6 +679,130 @@ int printAllConstraintsMenu(struct problemStatement* pS)
         if(menuChoice!=EXIT_OPT && menuChoice<=pS->nConstraints)
         {
             printInfoConstraint(menuChoice,pS);
+        }
+    }
+    return 0;
+}
+
+int printStatementMenu(struct problemStatement* pS)
+{
+    char stroutTop[128],stroutBasicInfo[128],stroutObjInfo[128];
+    int menuChoice;
+    menuChoice=INITIALIZE_VALUE_OPT;
+    sprintf(stroutTop,"Problem statement %s, printMenu. Exit %d",(pS->modelType==TYPE_INPUT) ? "INPUT" :"SOLVE", EXIT_OPT);
+    sprintf(stroutBasicInfo, "NConstraints: %d, NVariables: %d", pS->nConstraints, pS->nVariables);
+
+    if(pS->modelType==TYPE_SOLVE && pS->is2fasesNeeded)
+    {
+        sprintf(stroutObjInfo,"2 Pinfo obj func. 3 Pinfo 2fases");
+    }else
+    {
+        sprintf(stroutObjInfo,"2 Pinfo obj func.");
+    }
+    
+    while(menuChoice!=EXIT_OPT)
+    {
+        Bdisp_AllClr_DDVRAM();
+        
+        PrintMini(0,0,  (unsigned char *)stroutTop, MINI_OVER);
+        PrintMini(0,7,  (unsigned char *)stroutBasicInfo, MINI_OVER);
+        PrintMini(0, 14, (unsigned char*)"1 Pinfo constraint", MINI_OVER);
+        PrintMini(0, 21, (unsigned char*)stroutObjInfo, MINI_OVER);
+        if(pS->modelType==TYPE_SOLVE)
+        {
+            PrintMini(0, 28, (unsigned char*)"4 Pinfo aj vec", MINI_OVER);
+        }
+        menuChoice = InputI(0, 35);
+        Bdisp_PutDisp_DD();
+        switch (menuChoice)
+        {
+        case 1: printAllConstraintsMenu(pS);break;
+        case 2: printObjFunc(pS,TYPE_INPUT);break;
+        case 3: if(pS->modelType==TYPE_SOLVE){printObjFunc(pS,TYPE_SOLVE);};break;
+        case 4: if(pS->modelType==TYPE_SOLVE){printAjVec(pS);};break;
+        default: break;
+        }
+    }
+    return 0;
+}
+
+int printResVariables()
+{
+    char stroutTop[128],stroutBasicInfo[128],stroutBasicInfo2[128],stroutVariable[128];
+    char *uselessSring[128];
+    int menuChoice,i,idBasicVar;
+    menuChoice=INITIALIZE_VALUE_OPT;
+    sprintf(stroutTop,"Var res, printMenu. Exit %d", EXIT_OPT);
+    sprintf(stroutBasicInfo, "Nvars: %d, NVB: %d",ex.nVariables,ex.nodes.its[ex.nodes.nIterations]->BinvSize);
+    sprintf(stroutBasicInfo2, "Select a var:");
+
+    while(menuChoice!=EXIT_OPT)
+    {
+        Bdisp_AllClr_DDVRAM();
+        
+        PrintMini(0,0,  (unsigned char *)stroutTop, MINI_OVER);
+        PrintMini(0,7,  (unsigned char *)stroutBasicInfo, MINI_OVER);
+        PrintMini(0,14,  (unsigned char *)stroutBasicInfo2, MINI_OVER);
+        menuChoice = InputI(0, 21);
+        Bdisp_PutDisp_DD();
+        if(menuChoice<=ex.nVariables)
+        {
+            if(ex.nodes.its[ex.nodes.nIterations]->idBasicVariables[menuChoice-1])
+            {
+                for(i=0;i<ex.nodes.its[ex.nodes.nIterations]->BinvSize;i++)
+                {
+                    if(ex.nodes.its[ex.nodes.nIterations]->idByRowOfBasicVarsInBInv[i]==menuChoice-1)
+                    {
+                        idBasicVar=i;
+                    }
+                }
+                sprintf(stroutVariable, "x%d: %.2f",menuChoice,ex.nodes.its[ex.nodes.nIterations]->xb[idBasicVar]);
+            }else
+            {
+                sprintf(stroutVariable, "x%d: %.2f",menuChoice,0);
+            }
+            PrintMini(0,28,(unsigned char*) stroutVariable,MINI_OVER);
+        }else
+        {
+            PrintMini(0,28,  (unsigned char *)"No var found", MINI_OVER);
+        }
+        PrintMini(0, 35, (unsigned char*)"Press any key to continue", MINI_OVER);
+        string_input(0, 42, uselessSring);
+        Bdisp_PutDisp_DD();
+        memset(stroutVariable,0,128);
+        
+    }
+    return 0;
+}
+
+int printIts()
+{
+    return 0;
+}
+
+int printSolMenu()
+{
+    char stroutTop[128],stroutBasicInfo[128],stroutBasicInfo2[128];
+    int menuChoice;
+    menuChoice=INITIALIZE_VALUE_OPT;
+    sprintf(stroutTop,"Problem solution, printMenu. Exit %d", EXIT_OPT);
+    sprintf(stroutBasicInfo, "Nits: %d, ZSol: %.2f",ex.nodes.nIterations,ex.nodes.its[ex.nodes.nIterations]->zSol);
+
+    while(menuChoice!=EXIT_OPT)
+    {
+        Bdisp_AllClr_DDVRAM();
+        
+        PrintMini(0,0,  (unsigned char *)stroutTop, MINI_OVER);
+        PrintMini(0,7,  (unsigned char *)stroutBasicInfo, MINI_OVER);
+        PrintMini(0, 14, (unsigned char*)"1 Pinfo res vars", MINI_OVER);
+        PrintMini(0, 21, (unsigned char*)"2 Pinfo its", MINI_OVER);
+        menuChoice = InputI(0, 28);
+        Bdisp_PutDisp_DD();
+        switch (menuChoice)
+        {
+            case 1: printResVariables();break;
+            case 2: printIts();break;
+            default: break;
         }
     }
     return 0;
@@ -1171,11 +1253,7 @@ int solveSimplexLP(int nodeId)
     {
         lastItId=solveSimplexLPOneFase(nodeId, 0);
     }
-    sprintf(strSol,"ZSol: %.2f",ex.nodes.its[lastItId]->zSol);
-    Bdisp_AllClr_DDVRAM();
-    PrintMini(0,0,(unsigned char*)strSol,MINI_OVER);
-    Bdisp_PutDisp_DD();
-    Sleep(3000);
+    ex.nodes.nIterations=lastItId;
 
     return 0;
 }
@@ -1200,21 +1278,22 @@ int initializeExecution()
 int AddIn_main(int isAppli, unsigned short OptionNum)
 {
     char str[128];
-    selectExecutionMode();
+    // selectExecutionMode();
     if(ex.mode==MODE_FULL_EXECUTION)
     {
-        // ex.initialProblemStatement=createProblemStatementToDebug2Fases();
-        ex.initialProblemStatement=getProblemInputs();
+        ex.initialProblemStatement=createProblemStatementToDebug2Fases();
+        // ex.initialProblemStatement=getProblemInputs();
         // Bdisp_AllClr_DDVRAM();
         // sprintf(str,"nSlope %d, N2F %d",ex.initialProblemStatement->nVariablesSlope,ex.initialProblemStatement->nVariables2fases);
         // PrintMini(0, 0, (unsigned char *)str, MINI_OVER);    
         // Bdisp_PutDisp_DD();
         // Sleep(3000);
-        printStatementMenu(ex.initialProblemStatement);
+        // printStatementMenu(ex.initialProblemStatement);
         convertModel(ex);
         printStatementMenu(ex.canonicalStatement);
         initializeExecution();
         solveSimplexLP(0);
+        printSolMenu();
 
     }else if(ex.mode==MODE_INPUT_TABLE)
     {

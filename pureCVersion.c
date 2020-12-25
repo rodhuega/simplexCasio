@@ -173,7 +173,7 @@ float InputD(int x, int y)
 {
     char *string[128], *stopstring;
     string_input(x, y, string);
-    return strtof(string, &stopstring);
+    return strtod(string, &stopstring);
 }
 
 int InputI(int x, int y)
@@ -780,7 +780,87 @@ int printStatementMenu(struct problemStatement* pS)
     return 0;
 }
 
+int printResVariables()
+{
+    char stroutTop[128],stroutBasicInfo[128],stroutBasicInfo2[128],stroutVariable[128];
+    char *uselessSring[128];
+    int menuChoice,i,idBasicVar;
+    menuChoice=INITIALIZE_VALUE_OPT;
+    sprintf(stroutTop,"Var res, printMenu. Exit %d", EXIT_OPT);
+    sprintf(stroutBasicInfo, "Nvars: %d, NVB: %d",ex.nVariables,ex.nodes.its[ex.nodes.nIterations]->BinvSize);
+    sprintf(stroutBasicInfo2, "Select a var:");
 
+    while(menuChoice!=EXIT_OPT)
+    {
+        Bdisp_AllClr_DDVRAM();
+        
+        PrintMini(0,0,  (unsigned char *)stroutTop, MINI_OVER);
+        PrintMini(0,7,  (unsigned char *)stroutBasicInfo, MINI_OVER);
+        PrintMini(0,14,  (unsigned char *)stroutBasicInfo2, MINI_OVER);
+        menuChoice = InputI(0, 21);
+        Bdisp_PutDisp_DD();
+        if(menuChoice<=ex.nVariables)
+        {
+            if(ex.nodes.its[ex.nodes.nIterations]->idBasicVariables[menuChoice-1])
+            {
+                for(i=0;i<ex.nodes.its[ex.nodes.nIterations]->BinvSize;i++)
+                {
+                    if(ex.nodes.its[ex.nodes.nIterations]->idByRowOfBasicVarsInBInv[i]==menuChoice-1)
+                    {
+                        idBasicVar=i;
+                    }
+                }
+                sprintf(stroutVariable, "x%d: %.2f",menuChoice,ex.nodes.its[ex.nodes.nIterations]->xb[idBasicVar]);
+            }else
+            {
+                sprintf(stroutVariable, "x%d: %.2f",menuChoice,0);
+            }
+            PrintMini(0,28,(unsigned char*) stroutVariable,MINI_OVER);
+        }else
+        {
+            PrintMini(0,28,  (unsigned char *)"No var found", MINI_OVER);
+        }
+        PrintMini(0, 35, (unsigned char*)"Press any key to continue", MINI_OVER);
+        string_input(0, 42, uselessSring);
+        Bdisp_PutDisp_DD();
+        memset(stroutVariable,0,128);
+        
+    }
+    return 0;
+}
+
+int printIts()
+{
+    return 0;
+}
+
+int printSolMenu()
+{
+    char stroutTop[128],stroutBasicInfo[128],stroutBasicInfo2[128];
+    int menuChoice;
+    menuChoice=INITIALIZE_VALUE_OPT;
+    sprintf(stroutTop,"Problem solution, printMenu. Exit %d", EXIT_OPT);
+    sprintf(stroutBasicInfo, "Nits: %d, ZSol: %.2f",ex.nodes.nIterations,ex.nodes.its[ex.nodes.nIterations]->zSol);
+
+    while(menuChoice!=EXIT_OPT)
+    {
+        Bdisp_AllClr_DDVRAM();
+        
+        PrintMini(0,0,  (unsigned char *)stroutTop, MINI_OVER);
+        PrintMini(0,7,  (unsigned char *)stroutBasicInfo, MINI_OVER);
+        PrintMini(0, 14, (unsigned char*)"1 Pinfo res vars", MINI_OVER);
+        PrintMini(0, 21, (unsigned char*)"2 Pinfo its", MINI_OVER);
+        menuChoice = InputI(0, 28);
+        Bdisp_PutDisp_DD();
+        switch (menuChoice)
+        {
+            case 1: printResVariables();break;
+            case 2: printIts();break;
+            default: break;
+        }
+    }
+    return 0;
+}
 
 int getInequalitySign(int nConstraint, int *nVariablesSlope, int * nVariables2fases)
 {   
@@ -1227,12 +1307,7 @@ int solveSimplexLP(int nodeId)
     {
         lastItId=solveSimplexLPOneFase(nodeId, 0);
     }
-    Sleep(3000);
-    sprintf(strSol,"ZSol: %.2f",ex.nodes.its[lastItId]->zSol);
-    Bdisp_AllClr_DDVRAM();
-    PrintMini(0,0,(unsigned char*)strSol,MINI_OVER);
-    Bdisp_PutDisp_DD();
-    Sleep(3000);
+    ex.nodes.nIterations=lastItId;
 
     return 0;
 }
@@ -1272,6 +1347,7 @@ int AddIn_main(int isAppli, unsigned short OptionNum)
         printStatementMenu(ex.canonicalStatement);
         initializeExecution();
         solveSimplexLP(0);
+        printSolMenu();
 
     }else if(ex.mode==MODE_INPUT_TABLE)
     {
