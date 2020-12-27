@@ -1249,6 +1249,128 @@ struct problemStatement* getProblemInputs()
     return pInput;
 }
 
+struct iteration* getProblemFromTableau()
+{
+    char strout[128];
+    unsigned int nConstraints;
+    unsigned int nVariables;
+    unsigned int i,j;
+    int problemType;
+    struct iteration *it;
+    float ** temporalTableau;
+    it->numIteration=0;
+    it = malloc(sizeof(struct iteration));
+    Bdisp_AllClr_DDVRAM();
+    PrintMini(0, 0, (unsigned char *)"NRows?", MINI_OVER);
+    Bdisp_PutDisp_DD();
+    nConstraints = InputI(0, 7);
+    PrintMini(0, 14, (unsigned char *)"NVariables?", MINI_OVER);
+    Bdisp_PutDisp_DD();
+    nVariables = InputI(0, 21);
+    problemType = TYPE_LP;
+    it->BinvSize=nConstraints;
+    it->idBasicVariables=calloc(nVariables,sizeof(float));
+    it->idByRowOfBasicVarsInBInv=calloc(it->BinvSize,sizeof(float));
+    //Administracion de variables basicas
+    for (i = 0; i < nConstraints; i++)
+    {
+        Bdisp_AllClr_DDVRAM();
+        sprintf(strout,"id Basic var Row %d",i+1);
+        PrintMini(0, 0, (unsigned char *)strout, MINI_OVER);
+        it->idByRowOfBasicVarsInBInv[i] = InputI(0, 7) -1;
+        Bdisp_PutDisp_DD();
+        memset(strout,0,128);
+        it->idBasicVariables[it->idByRowOfBasicVarsInBInv[i]]=1;
+    }
+    //Valores de las variables en la tabla
+    temporalTableau = calloc(nConstraints,sizeof(float*));
+    for(i=0;i<nConstraints;i++)
+    {
+        temporalTableau[i]= calloc(nVariables,sizeof(float*));
+        for(j=0;j<nVariables;j++)
+        {
+            Bdisp_AllClr_DDVRAM();
+            sprintf(strout,"Value var Row %d Col %d",i+1,j+1);
+            PrintMini(0, 0, (unsigned char *)strout, MINI_OVER);
+            temporalTableau[i][j] = InputD(0, 7);
+            Bdisp_PutDisp_DD();
+            memset(strout,0,128);
+        }
+    }
+    //Valores de xB
+    it->xb=calloc(nConstraints,sizeof(float));
+    for(i=0;i<nConstraints;i++)
+    {
+        Bdisp_AllClr_DDVRAM();
+        sprintf(strout,"Value xb Row %d",i+1);
+        PrintMini(0, 0, (unsigned char *)strout, MINI_OVER);
+        it->xb[i] = InputD(0, 7);
+        Bdisp_PutDisp_DD();
+        memset(strout,0,128);
+    }
+    //Valores Cj-Zj
+    it->cjMinusZj=calloc(nVariables,sizeof(float));
+    for(i=0;i<nVariables;i++)
+    {
+        Bdisp_AllClr_DDVRAM();
+        sprintf(strout,"Value Cj-Zj x%d",i+1);
+        PrintMini(0, 0, (unsigned char *)strout, MINI_OVER);
+        it->cjMinusZj[i] = InputD(0, 7);
+        Bdisp_PutDisp_DD();
+        memset(strout,0,128);
+    }
+    // -Z
+    Bdisp_AllClr_DDVRAM();
+    PrintMini(0, 0, (unsigned char *)"Z val", MINI_OVER);
+    it->zSol = - InputD(0, 7);
+    Bdisp_PutDisp_DD();
+    //Funcion objetivo original
+    Bdisp_AllClr_DDVRAM();
+    sprintf(strout,"OBJ. Min: %d, Max %d",FUNC_MINIMIZE,FUNC_MAXIMIZE);
+    PrintMini(0, 0, (unsigned char *)strout, MINI_OVER);
+    ex.inputCvectorValues=calloc(nVariables+1,sizeof(float));
+    ex.currentFuncObjectivePurpose = InputI(0, 7);
+    Bdisp_PutDisp_DD();
+    memset(strout,0,128);
+    for(i=0;i<nVariables;i++)
+    {
+        Bdisp_AllClr_DDVRAM();
+        sprintf(strout,"Obj value var x%d",i+1);
+        PrintMini(0, 0, (unsigned char *)strout, MINI_OVER);
+        ex.inputCvectorValues[i] = InputD(0, 7);
+        Bdisp_PutDisp_DD();
+        memset(strout,0,128);
+    }
+    Bdisp_AllClr_DDVRAM();
+    sprintf(strout,"Obj value Independent");
+    PrintMini(0, 0, (unsigned char *)strout, MINI_OVER);
+    ex.inputCvectorValues[nVariables] = InputD(0, 7);
+    Bdisp_PutDisp_DD();
+
+    //Adaptacion a iteracion de Binv
+    it->Binv=calloc(it->BinvSize,sizeof(float*));
+    for(i=0;i<it->BinvSize;i++)
+    {
+        it->Binv[i]=calloc(it->BinvSize,sizeof(float));
+        for(j=0;j<it->BinvSize;j++)
+        {
+            it->Binv[i][j]=temporalTableau[it->idByRowOfBasicVarsInBInv[i]][it->idByRowOfBasicVarsInBInv[j]];
+        }
+    }
+    //Adaptacion a iteracion de vectores Y
+    // it->yj=calloc(nVariables,sizeof(float*));
+    // for(i=0;i<nVariables;i++)
+    // {
+    //     it->yj[i]=calloc(nConstraints,sizeof(float));
+    //     for(j=0;j<nConstraints;j++)
+    //     {
+    //         it->yj[i][j]=temporalTableau[j][i];
+    //     }
+    // }
+    free(temporalTableau);
+    return it;
+}
+
 int selectExecutionMode()
 {
     char strout[128];
@@ -1531,7 +1653,6 @@ int solveSimplexLP(int nodeId)
 {
     int itId,lastItId;
     char strSol[128];
-    itId=0;
     ex.nodes.id=nodeId;
     ex.nodes.its=malloc(10*sizeof(struct iteration*));
     ex.nodes.its[0]=modelToIteration(ex.canonicalStatement);
@@ -1572,18 +1693,16 @@ int initializeExecution()
 int AddIn_main(int isAppli, unsigned short OptionNum)
 {
     char str[128];
-    selectExecutionMode();
+    // selectExecutionMode();
     if(ex.mode==MODE_FULL_EXECUTION)
     {
-        // ex.initialProblemStatement=createProblemStatementToDebug2Fases();
-        // 
-        // 
         // sprintf(str,"nSlope %d, N2F %d",ex.initialProblemStatement->nVariablesSlope,ex.initialProblemStatement->nVariables2fases);
         // PrintMini(0, 0, (unsigned char *)str, MINI_OVER);    
         // Bdisp_PutDisp_DD();
         // Sleep(3000);
         Bdisp_AllClr_DDVRAM();
-        ex.initialProblemStatement=getProblemInputs();
+        ex.initialProblemStatement=createProblemStatementToDebug2Fases();
+        // ex.initialProblemStatement=getProblemInputs();
         printStatementMenu(ex.initialProblemStatement);
         convertModel(ex);
         printStatementMenu(ex.canonicalStatement);

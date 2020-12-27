@@ -1,4 +1,4 @@
-;HITACHI OPTIMIZING LINKAGE EDITOR GENERATED FILE 2020.12.25
+;HITACHI OPTIMIZING LINKAGE EDITOR GENERATED FILE 2020.12.27
 ;fsymbol = P
 
 ;SECTION NAME = P
@@ -88,320 +88,324 @@ _getRightValue: .equ h'00302208
 _getInequation: .equ h'0030224a
  .export _getProblemInputs
 _getProblemInputs: .equ h'00302320
+ .export _getProblemFromTableau
+_getProblemFromTableau: .equ h'00302598
  .export _selectExecutionMode
-_selectExecutionMode: .equ h'0030257e
+_selectExecutionMode: .equ h'003029f8
  .export _convertModel
-_convertModel: .equ h'00302600
+_convertModel: .equ h'00302a46
  .export _createProblemStatementToDebug2Fases
-_createProblemStatementToDebug2Fases: .equ h'00302946
+_createProblemStatementToDebug2Fases: .equ h'00302db6
  .export _createProblemStatementToDebug
-_createProblemStatementToDebug: .equ h'00302a74
+_createProblemStatementToDebug: .equ h'00302ec0
  .export _convertToSecondPhase
-_convertToSecondPhase: .equ h'00302b80
+_convertToSecondPhase: .equ h'00302fcc
  .export _solveSimplexLPOneFase
-_solveSimplexLPOneFase: .equ h'00302c48
+_solveSimplexLPOneFase: .equ h'003030d4
  .export _solveSimplexLP
-_solveSimplexLP: .equ h'00302cae
+_solveSimplexLP: .equ h'0030313a
  .export _initializeExecution
-_initializeExecution: .equ h'00302d64
+_initializeExecution: .equ h'003031b2
  .export _AddIn_main
-_AddIn_main: .equ h'00302d9a
+_AddIn_main: .equ h'00303200
  .export ___LINK_PROTECT
-___LINK_PROTECT: .equ h'00302e54
+___LINK_PROTECT: .equ h'003032b8
  .export _SetQuitHandler
-_SetQuitHandler: .equ h'00302e58
+_SetQuitHandler: .equ h'003032bc
  .export _OnAppCloseDefault
-_OnAppCloseDefault: .equ h'00302e5e
+_OnAppCloseDefault: .equ h'003032c2
  .export __INITSCT_ADDIN
-__INITSCT_ADDIN: .equ h'00302eb2
+__INITSCT_ADDIN: .equ h'00303316
  .export _INIT_ADDIN_APPLICATION
-_INIT_ADDIN_APPLICATION: .equ h'00302efa
+_INIT_ADDIN_APPLICATION: .equ h'0030335e
  .export __adds
-__adds: .equ h'00302f76
+__adds: .equ h'003033da
  .export __subs
-__subs: .equ h'00302f70
+__subs: .equ h'003033d4
  .export __divs
-__divs: .equ h'00303234
+__divs: .equ h'00303698
  .export __dtos
-__dtos: .equ h'00303374
+__dtos: .equ h'003037d8
  .export __eqs
-__eqs: .equ h'00303450
+__eqs: .equ h'003038b4
  .export __gts
-__gts: .equ h'003034b8
+__gts: .equ h'0030391c
  .export __lts
-__lts: .equ h'00303530
+__lts: .equ h'00303994
  .export __muls
-__muls: .equ h'003035a8
+__muls: .equ h'00303a0c
+ .export __negs
+__negs: .equ h'00303b4c
  .export __stod
-__stod: .equ h'003036e8
+__stod: .equ h'00303b54
  .export __quick_odd_mvn
-__quick_odd_mvn: .equ h'0030377c
+__quick_odd_mvn: .equ h'00303be8
  .export __quick_evn_mvn
-__quick_evn_mvn: .equ h'00303770
+__quick_evn_mvn: .equ h'00303bdc
  .export _atoi
-_atoi: .equ h'00303814
+_atoi: .equ h'00303c80
  .export _memset
-_memset: .equ h'00303820
+_memset: .equ h'00303c8c
  .export _sprintf
-_sprintf: .equ h'00303838
+_sprintf: .equ h'00303ca4
  .export _strtod
-_strtod: .equ h'00303874
+_strtod: .equ h'00303ce0
  .export _Bdel_cychdr
-_Bdel_cychdr: .equ h'00303dd0
+_Bdel_cychdr: .equ h'0030423c
  .export _Bdisp_AllClr_DDVRAM
-_Bdisp_AllClr_DDVRAM: .equ h'00303de0
+_Bdisp_AllClr_DDVRAM: .equ h'0030424c
  .export _Bdisp_PutDisp_DD
-_Bdisp_PutDisp_DD: .equ h'00303df0
+_Bdisp_PutDisp_DD: .equ h'0030425c
  .export _BfileFLS_CloseFile
-_BfileFLS_CloseFile: .equ h'00303e00
+_BfileFLS_CloseFile: .equ h'0030426c
  .export _Bkey_Set_RepeatTime_Default
-_Bkey_Set_RepeatTime_Default: .equ h'00303e10
+_Bkey_Set_RepeatTime_Default: .equ h'0030427c
  .export _CallbackAtQuitMainFunction
-_CallbackAtQuitMainFunction: .equ h'00303e20
+_CallbackAtQuitMainFunction: .equ h'0030428c
  .export _calloc
-_calloc: .equ h'00303e30
+_calloc: .equ h'0030429c
  .export _flsFindClose
-_flsFindClose: .equ h'00303e40
+_flsFindClose: .equ h'003042ac
  .export _free
-_free: .equ h'00303e50
+_free: .equ h'003042bc
  .export _GLibAddinAplExecutionCheck
-_GLibAddinAplExecutionCheck: .equ h'00303e60
+_GLibAddinAplExecutionCheck: .equ h'003042cc
  .export _Hmem_SetMMU
-_Hmem_SetMMU: .equ h'00303e70
+_Hmem_SetMMU: .equ h'003042dc
  .export _malloc
-_malloc: .equ h'00303e80
+_malloc: .equ h'003042ec
  .export _PrintMini
-_PrintMini: .equ h'00303e90
+_PrintMini: .equ h'003042fc
  .export _locate
-_locate: .equ h'00303eac
+_locate: .equ h'00304318
  .export _Bdisp_ReadArea_DD
-_Bdisp_ReadArea_DD: .equ h'00303ed4
+_Bdisp_ReadArea_DD: .equ h'00304340
  .export _GetSDKLibraryVersion
-_GetSDKLibraryVersion: .equ h'00304008
+_GetSDKLibraryVersion: .equ h'00304474
  .export _SetTimer
-_SetTimer: .equ h'0030400e
+_SetTimer: .equ h'0030447a
  .export _KillTimer
-_KillTimer: .equ h'00304062
+_KillTimer: .equ h'003044ce
  .export _Sleep
-_Sleep: .equ h'003040a6
+_Sleep: .equ h'00304512
  .export _Init_SerialPort
-_Init_SerialPort: .equ h'00304108
+_Init_SerialPort: .equ h'00304574
  .export _Start_SerialPort
-_Start_SerialPort: .equ h'0030438e
+_Start_SerialPort: .equ h'003047fa
  .export _SerialTransmit
-_SerialTransmit: .equ h'003043b4
+_SerialTransmit: .equ h'00304820
  .export _SerialReceive
-_SerialReceive: .equ h'003043f0
+_SerialReceive: .equ h'0030485c
  .export _Stop_SerialPort
-_Stop_SerialPort: .equ h'00304410
+_Stop_SerialPort: .equ h'0030487c
  .export _RTCReset
-_RTCReset: .equ h'0030443a
+_RTCReset: .equ h'003048a6
  .export _RTCStart
-_RTCStart: .equ h'0030444e
+_RTCStart: .equ h'003048ba
  .export _RTCStop
-_RTCStop: .equ h'00304462
+_RTCStop: .equ h'003048ce
  .export _RTCSetYear
-_RTCSetYear: .equ h'00304476
+_RTCSetYear: .equ h'003048e2
  .export _RTCSetMonth
-_RTCSetMonth: .equ h'003044e0
+_RTCSetMonth: .equ h'0030494c
  .export _RTCSetDayOfMonth
-_RTCSetDayOfMonth: .equ h'00304508
+_RTCSetDayOfMonth: .equ h'00304974
  .export _RTCSetDayOfWeek
-_RTCSetDayOfWeek: .equ h'00304538
+_RTCSetDayOfWeek: .equ h'003049a4
  .export _RTCSetHour
-_RTCSetHour: .equ h'00304544
+_RTCSetHour: .equ h'003049b0
  .export _RTCSetMinute
-_RTCSetMinute: .equ h'00304574
+_RTCSetMinute: .equ h'003049e0
  .export _RTCSetSecond
-_RTCSetSecond: .equ h'003045a4
+_RTCSetSecond: .equ h'00304a10
  .export _RTCReadYear
-_RTCReadYear: .equ h'003045d4
+_RTCReadYear: .equ h'00304a40
  .export _RTCReadMonth
-_RTCReadMonth: .equ h'0030463c
+_RTCReadMonth: .equ h'00304aa8
  .export _RTCReadDayOfMonth
-_RTCReadDayOfMonth: .equ h'00304676
+_RTCReadDayOfMonth: .equ h'00304ae2
  .export _RTCReadDayOfWeek
-_RTCReadDayOfWeek: .equ h'003046ae
+_RTCReadDayOfWeek: .equ h'00304b1a
  .export _RTCReadHour
-_RTCReadHour: .equ h'003046d0
+_RTCReadHour: .equ h'00304b3c
  .export _RTCReadMinute
-_RTCReadMinute: .equ h'00304708
+_RTCReadMinute: .equ h'00304b74
  .export _RTCReadSecond
-_RTCReadSecond: .equ h'00304740
+_RTCReadSecond: .equ h'00304bac
  .export _ReadPort_A
-_ReadPort_A: .equ h'00304778
+_ReadPort_A: .equ h'00304be4
  .export _ReadPort_B
-_ReadPort_B: .equ h'00304780
+_ReadPort_B: .equ h'00304bec
  .export _ReadPort_C
-_ReadPort_C: .equ h'00304788
+_ReadPort_C: .equ h'00304bf4
  .export _ReadPort_D
-_ReadPort_D: .equ h'00304790
+_ReadPort_D: .equ h'00304bfc
  .export _ReadPort_E
-_ReadPort_E: .equ h'00304798
+_ReadPort_E: .equ h'00304c04
  .export _ReadPort_F
-_ReadPort_F: .equ h'003047a0
+_ReadPort_F: .equ h'00304c0c
  .export _ReadPort_G
-_ReadPort_G: .equ h'003047a8
+_ReadPort_G: .equ h'00304c14
  .export _ReadPort_H
-_ReadPort_H: .equ h'003047b0
+_ReadPort_H: .equ h'00304c1c
  .export _ReadPort_J
-_ReadPort_J: .equ h'003047b8
+_ReadPort_J: .equ h'00304c24
  .export _ReadPort_K
-_ReadPort_K: .equ h'003047c0
+_ReadPort_K: .equ h'00304c2c
  .export _ReadPort_L
-_ReadPort_L: .equ h'003047c8
+_ReadPort_L: .equ h'00304c34
  .export _ReadPort_M
-_ReadPort_M: .equ h'003047d0
+_ReadPort_M: .equ h'00304c3c
  .export _ReadPort_N
-_ReadPort_N: .equ h'003047d8
+_ReadPort_N: .equ h'00304c44
  .export _ReadPort_SCP
-_ReadPort_SCP: .equ h'003047e0
+_ReadPort_SCP: .equ h'00304c4c
  .export _GrayInterrupt
-_GrayInterrupt: .equ h'003047e8
+_GrayInterrupt: .equ h'00304c54
  .export _GrayInterrupt3
-_GrayInterrupt3: .equ h'00304870
+_GrayInterrupt3: .equ h'00304cdc
  .export _GrayInit
-_GrayInit: .equ h'00304934
+_GrayInit: .equ h'00304da0
  .export _GrayInit3
-_GrayInit3: .equ h'00304994
+_GrayInit3: .equ h'00304e00
  .export _GrayLinkBuffers
-_GrayLinkBuffers: .equ h'003049fa
+_GrayLinkBuffers: .equ h'00304e66
  .export _GrayLinkBuffers3
-_GrayLinkBuffers3: .equ h'00304a02
+_GrayLinkBuffers3: .equ h'00304e6e
  .export _GrayEnd
-_GrayEnd: .equ h'00304a10
+_GrayEnd: .equ h'00304e7c
  .export _CPUSpeedNormal
-_CPUSpeedNormal: .equ h'00304a46
+_CPUSpeedNormal: .equ h'00304eb2
  .export _CPUSpeedDouble
-_CPUSpeedDouble: .equ h'00304a66
+_CPUSpeedDouble: .equ h'00304ed2
  .export _CPUSpeedTriple
-_CPUSpeedTriple: .equ h'00304a8c
+_CPUSpeedTriple: .equ h'00304ef8
  .export _CPUSpeedQuadruple
-_CPUSpeedQuadruple: .equ h'00304afc
+_CPUSpeedQuadruple: .equ h'00304f68
  .export _string_input
-_string_input: .equ h'00304b24
+_string_input: .equ h'00304f90
  .export __divls
-__divls: .equ h'0030595c
+__divls: .equ h'00305dc8
  .export __modls
-__modls: .equ h'00305a10
+__modls: .equ h'00305e7c
  .export __fmtout
-__fmtout: .equ h'00305ad8
+__fmtout: .equ h'00305f44
  .export __strchek
-__strchek: .equ h'00306bc4
+__strchek: .equ h'00307030
  .export __stx
-__stx: .equ h'00306bec
+__stx: .equ h'00307058
  .export _strtol
-_strtol: .equ h'00306ca4
+_strtol: .equ h'00307110
  .export _Bcre_cychdr
-_Bcre_cychdr: .equ h'00306f68
+_Bcre_cychdr: .equ h'003073d4
  .export _BSrl_DummyWAIT
-_BSrl_DummyWAIT: .equ h'00306f78
+_BSrl_DummyWAIT: .equ h'003073e4
  .export _Bsta_cychdr
-_Bsta_cychdr: .equ h'00306f88
+_Bsta_cychdr: .equ h'003073f4
  .export _Bstp_cychdr
-_Bstp_cychdr: .equ h'00306f98
+_Bstp_cychdr: .equ h'00307404
  .export _DD_GET
-_DD_GET: .equ h'00306fa8
+_DD_GET: .equ h'00307414
  .export _GetKey
-_GetKey: .equ h'00306fb8
+_GetKey: .equ h'00307424
  .export _locate_OS
-_locate_OS: .equ h'00306fc8
+_locate_OS: .equ h'00307434
  .export _PrintMiniSd
-_PrintMiniSd: .equ h'00306fd8
+_PrintMiniSd: .equ h'00307444
  .export _DrawAll
-_DrawAll: .equ h'0030701c
+_DrawAll: .equ h'00307488
  .export _Change_Contrast
-_Change_Contrast: .equ h'00307074
+_Change_Contrast: .equ h'003074e0
  .export _FastKeyDown
-_FastKeyDown: .equ h'003070c0
+_FastKeyDown: .equ h'0030752c
  .export _Setup_Serial
-_Setup_Serial: .equ h'00307098
+_Setup_Serial: .equ h'00307504
  .export _CopyVRAM
-_CopyVRAM: .equ h'00306fe8
+_CopyVRAM: .equ h'00307454
  .export _Reset_Calc
-_Reset_Calc: .equ h'0030708c
+_Reset_Calc: .equ h'003074f8
  .export _FastGetKey
-_FastGetKey: .equ h'003071b0
+_FastGetKey: .equ h'0030761c
  .export __eqd
-__eqd: .equ h'003071fc
+__eqd: .equ h'00307668
  .export __itod
-__itod: .equ h'00307290
+__itod: .equ h'003076fc
  .export __muld
-__muld: .equ h'00307388
+__muld: .equ h'003077f4
  .export __divlu
-__divlu: .equ h'003074f8
+__divlu: .equ h'00307964
  .export __modlu
-__modlu: .equ h'003075a0
+__modlu: .equ h'00307a0c
  .export __calcint
-__calcint: .equ h'00307658
+__calcint: .equ h'00307ac4
  .export __calcxpow
-__calcxpow: .equ h'00307704
+__calcxpow: .equ h'00307b70
  .export __its
-__its: .equ h'00307a28
+__its: .equ h'00307e94
  .export __xti
-__xti: .equ h'00307b58
+__xti: .equ h'00307fc4
  .export _memcpy
-_memcpy: .equ h'00307de8
+_memcpy: .equ h'00308254
  .export _strlen
-_strlen: .equ h'00307ea8
+_strlen: .equ h'00308314
  .export __add
-__add: .equ h'00307eb8
+__add: .equ h'00308324
  .export __allzero
-__allzero: .equ h'00307f14
+__allzero: .equ h'00308380
  .export __calcnpw
-__calcnpw: .equ h'00307f34
+__calcnpw: .equ h'003083a0
  .export __div64
-__div64: .equ h'00308034
+__div64: .equ h'003084a0
  .export __log10
-__log10: .equ h'003081c8
+__log10: .equ h'00308634
  .export __lsft
-__lsft: .equ h'00308490
+__lsft: .equ h'003088fc
  .export __lsfts
-__lsfts: .equ h'003084d8
+__lsfts: .equ h'00308944
  .export __mult64
-__mult64: .equ h'00308524
+__mult64: .equ h'00308990
  .export __packx
-__packx: .equ h'00308594
+__packx: .equ h'00308a00
  .export __pow5
-__pow5: .equ h'00308614
+__pow5: .equ h'00308a80
  .export __power
-__power: .equ h'00308638
+__power: .equ h'00308aa4
  .export __rnd
-__rnd: .equ h'0030878c
+__rnd: .equ h'00308bf8
  .export __rsft
-__rsft: .equ h'00308878
+__rsft: .equ h'00308ce4
  .export __rsfts
-__rsfts: .equ h'003088c4
+__rsfts: .equ h'00308d30
  .export __setsbit
-__setsbit: .equ h'0030891c
+__setsbit: .equ h'00308d88
  .export __sub
-__sub: .equ h'003089a0
+__sub: .equ h'00308e0c
  .export __umemcmp
-__umemcmp: .equ h'00308a34
+__umemcmp: .equ h'00308ea0
  .export __unpack
-__unpack: .equ h'00308a68
+__unpack: .equ h'00308ed4
  .export _memcmp
-_memcmp: .equ h'00308b04
+_memcmp: .equ h'00308f70
  .export __addd
-__addd: .equ h'00308c08
+__addd: .equ h'00309074
  .export __subdr
-__subdr: .equ h'00308b50
+__subdr: .equ h'00308fbc
  .export __subd
-__subd: .equ h'00308b38
+__subd: .equ h'00308fa4
  .export __dtoi
-__dtoi: .equ h'00308ec8
+__dtoi: .equ h'00309334
  .export __dtou
-__dtou: .equ h'00308ec8
+__dtou: .equ h'00309334
  .export __ltd
-__ltd: .equ h'00308f54
+__ltd: .equ h'003093c0
  .export __ned
-__ned: .equ h'00308ffc
+__ned: .equ h'00309468
  .export __divws
-__divws: .equ h'00309090
+__divws: .equ h'003094fc
  .export __duchek
-__duchek: .equ h'003090e0
+__duchek: .equ h'0030954c
  .export __mult
-__mult: .equ h'00309110
+__mult: .equ h'0030957c
  .export __pow10
-__pow10: .equ h'003091ec
+__pow10: .equ h'00309658
  .end
