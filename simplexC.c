@@ -52,7 +52,7 @@ struct iteration
     float *ctBinv;
     float *zj;
     float *cjMinusZj;
-    float *yj;
+    float **yj;
     float *xbDivYj;
 
     float zSol ;
@@ -291,7 +291,7 @@ float** calculateNewBinv(struct iteration *oldIt)
     //Calculo de la fila pivote
     for(i=0;i<oldIt->BinvSize;i++)
     {
-        res[indexPivot][i]=oldIt->Binv[indexPivot][i]/oldIt->yj[indexPivot];
+        res[indexPivot][i]=oldIt->Binv[indexPivot][i]/oldIt->yj[oldIt->idVarIn][indexPivot];
     }
 
     //Calculo del resto de filas
@@ -299,7 +299,7 @@ float** calculateNewBinv(struct iteration *oldIt)
     {
         for(j=0;j<oldIt->BinvSize && i!=indexPivot;j++)
         {
-            res[i][j]=oldIt->Binv[i][j]-(oldIt->yj[i]*res[indexPivot][j]);
+            res[i][j]=oldIt->Binv[i][j]-(oldIt->yj[oldIt->idVarIn][i]*res[indexPivot][j]);
         }
     }
     return res;
@@ -378,19 +378,22 @@ int calculateIteration(struct iteration *it)
             }
         }
     }
+    it->yj=calloc(ex.nVariables,sizeof(float*));
+    for(i=0;i<ex.nVariables;i++)
+    {
+        it->yj[i]=calculateMatrixVectorMul(it->BinvSize,it->Binv,ex.ajVector[i]);
+    }
     if(it->idVarIn!=-1)//Check optimum criteria
     {
-        //Calculate yj
-        it->yj=calculateMatrixVectorMul(it->BinvSize,it->Binv,ex.ajVector[it->idVarIn]);
         it->xbDivYj= calloc(it->BinvSize,sizeof(float));
         bestExitVarValue=INT_MAX;
         it->indexVarOutInBInvMatrix=-1;
         it->isUnbounded=1;
         for(i=0;i<it->BinvSize;i++)
         {
-            if(it->yj[i]!=0)
+            if(it->yj[it->idVarIn][i]!=0)
             {
-                it->xbDivYj[i]=it->xb[i]/it->yj[i];
+                it->xbDivYj[i]=it->xb[i]/it->yj[it->idVarIn][i];
                 if(it->xbDivYj[i]>0 && it->xbDivYj[i]<bestExitVarValue)
                 {
                     it->indexVarOutInBInvMatrix=i;
@@ -792,26 +795,49 @@ int printXbByIt(int itId)
 
 int printYandXbDivYByIt(int itId)
 {
-    char stroutBasicInfo[128],stroutBasicInfo2[128];
-    int menuChoice;
+    char stroutBasicInfo[128],stroutBasicInfo2[128],stroutBasicInfo3[128];
+    int menuChoice,menuChoice2;
     char *uselessSring[128];
+    sprintf(stroutBasicInfo, "Y & xb/y itId %d. S: %d.  %d exit",itId, ex.nodes.its[itId]->BinvSize,EXIT_OPT);
+    if(ex.nodes.its[itId]->idVarIn==-1)
+    {
+        sprintf(stroutBasicInfo2, "No VarIn and VarOut");
+
+    }else
+    {
+        sprintf(stroutBasicInfo2, "IdVarIn: %d, IdVarOut %d",ex.nodes.its[itId]->idVarIn+1,ex.nodes.its[itId]->idVarOut+1);
+    }
+    
     menuChoice=INITIALIZE_VALUE_OPT;
+    menuChoice2=INITIALIZE_VALUE_OPT;
     while(menuChoice!=EXIT_OPT)
     {
         Bdisp_AllClr_DDVRAM();
-        sprintf(stroutBasicInfo, "Y & xb/y itId %d. S: %d.  %d exit",itId, ex.nodes.its[itId]->BinvSize,EXIT_OPT);
+        
         PrintMini(0, 0, (unsigned char*)stroutBasicInfo, MINI_OVER);
-        menuChoice = InputI(0, 7);
+        PrintMini(0, 7, (unsigned char*)stroutBasicInfo2, MINI_OVER);
+        PrintMini(0, 14, (unsigned char*)"Var:", MINI_OVER);
+        PrintMini(0, 21, (unsigned char*)"Pos:", MINI_OVER);
+
+        menuChoice = InputI(28, 14);
+        menuChoice2 = InputI(28, 21);
         Bdisp_PutDisp_DD();
-        if(menuChoice!=EXIT_OPT && menuChoice<= ex.nodes.its[itId]->BinvSize)
+        if(menuChoice!=EXIT_OPT && menuChoice2!=EXIT_OPT && menuChoice<= ex.nodes.its[itId]->BinvSize)
         {
-            sprintf(stroutBasicInfo2, "Pos %d: Y: %.2f xb/y: %.2f",menuChoice,ex.nodes.its[itId]->yj[menuChoice-1],ex.nodes.its[itId]->xbDivYj[menuChoice-1]);
-            PrintMini(0,14,(unsigned char*) stroutBasicInfo2,MINI_OVER);
-            PrintMini(0, 21, (unsigned char*)"Press any key to continue", MINI_OVER);
-            string_input(0, 28, uselessSring);
+            if(menuChoice-1==ex.nodes.its[itId]->idVarIn)
+            {
+                sprintf(stroutBasicInfo3, "Var:%d.Pos:%d:Y:%.2f xb/y:%.2f",menuChoice,menuChoice2,ex.nodes.its[itId]->yj[menuChoice-1][menuChoice2-1],ex.nodes.its[itId]->xbDivYj[menuChoice2-1]);
+            }else
+            {
+                sprintf(stroutBasicInfo3, "Var:%d.Pos %d:Y:%.2f xb/y: NDisp",menuChoice,menuChoice2,ex.nodes.its[itId]->yj[menuChoice-1][menuChoice2-1]);
+            }
+            
+            PrintMini(0,28,(unsigned char*) stroutBasicInfo3,MINI_OVER);
+            PrintMini(0, 35, (unsigned char*)"Press any key to continue", MINI_OVER);
+            string_input(0, 42, uselessSring);
             Bdisp_PutDisp_DD();
         }
-        memset(stroutBasicInfo2,0,128);
+        memset(stroutBasicInfo3,0,128);
     }
     return 0;
 }
@@ -1379,7 +1405,8 @@ int selectExecutionMode()
     PrintMini(0, 0, (unsigned char *)strout, MINI_OVER);
     ex.mode = InputI(0, 7);
     Bdisp_PutDisp_DD();
-    ex.nNodes=0;
+    ex.nNodes=1;
+    ex.nodes.its=malloc(10*sizeof(struct iteration*));
     return 0;
 }
 
@@ -1654,8 +1681,11 @@ int solveSimplexLP(int nodeId)
     int itId,lastItId;
     char strSol[128];
     ex.nodes.id=nodeId;
-    ex.nodes.its=malloc(10*sizeof(struct iteration*));
-    ex.nodes.its[0]=modelToIteration(ex.canonicalStatement);
+    
+    if(ex.mode==MODE_FULL_EXECUTION)
+    {
+        ex.nodes.its[0]=modelToIteration(ex.canonicalStatement);
+    }
     if(ex.canonicalStatement->is2fasesActive)
     {
         lastItId=solveSimplexLPOneFase(nodeId, 0);
@@ -1693,7 +1723,7 @@ int initializeExecution()
 int AddIn_main(int isAppli, unsigned short OptionNum)
 {
     char str[128];
-    // selectExecutionMode();
+    selectExecutionMode();
     if(ex.mode==MODE_FULL_EXECUTION)
     {
         // sprintf(str,"nSlope %d, N2F %d",ex.initialProblemStatement->nVariablesSlope,ex.initialProblemStatement->nVariables2fases);
@@ -1712,7 +1742,9 @@ int AddIn_main(int isAppli, unsigned short OptionNum)
 
     }else if(ex.mode==MODE_INPUT_TABLE)
     {
-        //TODO
+        ex.nodes.its[0]=getProblemFromTableau();
+        solveSimplexLP(0);
+        printSolMenu();
     }else
     {
         Bdisp_AllClr_DDVRAM();

@@ -3,8 +3,8 @@
 [_1]
 Type=5
 Order=1
-Top=45
-Left=9750
+Top=735
+Left=5700
 Height=4740
 Width=8100
 State=0
@@ -14,7 +14,7 @@ OptionA=0
 
 [_2]
 Type=1
-Order=3
+Order=2
 Top=570
 Left=15810
 Height=4815
@@ -26,7 +26,7 @@ OptionB=15
 
 [_3]
 Type=6
-Order=2
+Order=3
 Top=5340
 Left=15915
 Height=6390
