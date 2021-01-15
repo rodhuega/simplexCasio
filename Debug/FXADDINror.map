@@ -1,8 +1,8 @@
-Hitachi Optimizing Linkage Editor (Ver. 7.1.03.000)10-Jan-2021 20:18:48
+Hitachi Optimizing Linkage Editor (Ver. 7.1.03.000)15-Jan-2021 22:38:47
 
 *** Options ***
 
--subcommand=C:\Users\pillo\AppData\Local\Temp\hmk59CB.tmp
+-subcommand=C:\Users\pillo\AppData\Local\Temp\hmk951.tmp
 noprelink
 sdebug
 rom D=R
@@ -30,17 +30,17 @@ SECTION                            START      END         SIZE   ALIGN
 P_TOP
                                   00300200  0030020b         c   4
 P
-                                  0030020c  003097eb      95e0   4
+                                  0030020c  00309a4f      9844   4
 C
-                                  003097ec  0030a407       c1c   4
+                                  00309a50  0030a6b7       c68   4
 D
-                                  0030a408  0030a441        3a   4
+                                  0030a6b8  0030a6f1        3a   4
 B_BR_Size
                                   08100000  08100003         4   4
 B
-                                  08100004  0810005b        58   4
+                                  08100004  0810005f        5c   4
 R
-                                  0810005c  08100095        3a   4
+                                  08100060  08100099        3a   4
 
 *** Symbol List ***
 
@@ -56,7 +56,7 @@ FILE=C:\casioPr\simplexCasio\Debug\simplexC.obj
 
 SECTION=P
 FILE=C:\casioPr\simplexCasio\Debug\simplexC.obj
-                                  0030020c  003033b3      31a8
+                                  0030020c  00303617      340c
   _InputD
                                   0030020c        2e   func ,g         * 
   _InputI
@@ -130,1313 +130,1313 @@ FILE=C:\casioPr\simplexCasio\Debug\simplexC.obj
   _printZjAndCjMinusZj
                                   00301d60       152   func ,g         * 
   _printIteration
-                                  00301eb2       1e6   func ,g         * 
+                                  00301eb2       1fe   func ,g         * 
   _printIts
-                                  00302098        7c   func ,g         * 
+                                  003020b0        7c   func ,g         * 
   _printSolMenu
-                                  00302114       114   func ,g         * 
+                                  0030212c       114   func ,g         * 
   _getInequalitySign
-                                  00302228        cc   func ,g         * 
+                                  00302240        cc   func ,g         * 
   _getRightValue
-                                  003022f4        42   func ,g         * 
+                                  0030230c        42   func ,g         * 
   _getInequation
-                                  00302336        d6   func ,g         * 
+                                  0030234e        d6   func ,g         * 
   _getProblemInputs
-                                  0030240c       278   func ,g         * 
+                                  00302424       278   func ,g         * 
   _getProblemFromTableau
-                                  00302684       460   func ,g         * 
+                                  0030269c       646   func ,g         * 
   _selectExecutionMode
-                                  00302ae4        56   func ,g         * 
+                                  00302ce2        ae   func ,g         * 
   _convertModel
-                                  00302b3a       36c   func ,g         * 
+                                  00302d90       346   func ,g         * 
   _createProblemStatementToDebug2Fases
-                                  00302ea6       10a   func ,g         * 
+                                  003030d6       12e   func ,g         * 
   _createProblemStatementToDebug
-                                  00302fb0       10c   func ,g         * 
+                                  00303204       10c   func ,g         * 
   _convertToSecondPhase
-                                  003030bc       108   func ,g         * 
+                                  00303310        c8   func ,g         * 
   _solveSimplexLPOneFase
-                                  003031c4        66   func ,g         * 
+                                  003033d8        74   func ,g         * 
   _solveSimplexLP
-                                  0030322a        76   func ,g         * 
+                                  0030344c        c4   func ,g         * 
   _initializeExecution
-                                  003032a0        4a   func ,g         * 
+                                  00303510        36   func ,g         * 
   _AddIn_main
-                                  003032ea        ca   func ,g         * 
+                                  00303546        d2   func ,g         * 
 FILE=C:\casio\OS\FX\lib\setup.obj
-                                  003033b4  003034cf       11c
+                                  00303618  00303733       11c
   ___LINK_PROTECT
-                                  003033b4         4   func ,g         * 
+                                  00303618         4   func ,g         * 
   _SetQuitHandler
-                                  003033b8         6   func ,g         * 
+                                  0030361c         6   func ,g         * 
   _OnAppCloseDefault
-                                  003033be        54   func ,g         * 
+                                  00303622        54   func ,g         * 
   __INITSCT_ADDIN
-                                  00303412        48   func ,g         * 
+                                  00303676        48   func ,g         * 
   _INIT_ADDIN_APPLICATION
-                                  0030345a        76   func ,g         * 
+                                  003036be        76   func ,g         * 
 FILE=r_adds
-                                  003034d0  0030373b       26c
+                                  00303734  0030399f       26c
   __subs
-                                  003034d0         0   none ,g         * 
+                                  00303734         0   none ,g         * 
   __adds
-                                  003034d6         0   none ,g         * 
+                                  0030373a         0   none ,g         * 
   rotation
-                                  003034f0         0   none ,l         * 
+                                  00303754         0   none ,l         * 
   exception_return
-                                  0030351a         0   none ,l         * 
+                                  0030377e         0   none ,l         * 
   label
-                                  0030353a         0   none ,l         * 
+                                  0030379e         0   none ,l         * 
   e_sftr26
-                                  0030353e         0   none ,l         * 
+                                  003037a2         0   none ,l         * 
   or_sticky
-                                  00303542         0   none ,l         * 
+                                  003037a6         0   none ,l         * 
   end_sftr
-                                  00303548         0   none ,l         * 
+                                  003037ac         0   none ,l         * 
   mantissa_sub
-                                  00303562         0   none ,l         * 
+                                  003037c6         0   none ,l         * 
   normalize
-                                  0030356c         0   none ,l         * 
+                                  003037d0         0   none ,l         * 
   n_sftl_8
-                                  00303582         0   none ,l         * 
+                                  003037e6         0   none ,l         * 
   n_sftl_4
-                                  0030358e         0   none ,l         * 
+                                  003037f2         0   none ,l         * 
   n_sftl_2
-                                  0030359c         0   none ,l         * 
+                                  00303800         0   none ,l         * 
   n_sftl_1
-                                  003035a4         0   none ,l         * 
+                                  00303808         0   none ,l         * 
   normal
-                                  003035ac         0   none ,l         * 
+                                  00303810         0   none ,l         * 
   end_calc
-                                  003035ae         0   none ,l         * 
+                                  00303812         0   none ,l         * 
   denormalize_loop
-                                  003035b6         0   none ,l         * 
+                                  0030381a         0   none ,l         * 
   end_denormal
-                                  003035bc         0   none ,l         * 
+                                  00303820         0   none ,l         * 
   round_carry
-                                  003035cc         0   none ,l         * 
+                                  00303830         0   none ,l         * 
   end_round
-                                  003035d0         0   none ,l         * 
+                                  00303834         0   none ,l         * 
   return_value
-                                  003035d0         0   none ,l         * 
+                                  00303834         0   none ,l         * 
   return
-                                  003035de         0   none ,l         * 
+                                  00303842         0   none ,l         * 
   exception1
-                                  003035ec         0   none ,l         * 
+                                  00303850         0   none ,l         * 
   return_NaN
-                                  003035fa         0   none ,l         * 
+                                  0030385e         0   none ,l         * 
   return_inf
-                                  00303600         0   none ,l         * 
+                                  00303864         0   none ,l         * 
   exception2
-                                  00303604         0   none ,l         * 
+                                  00303868         0   none ,l         * 
   p2_denorm_check
-                                  00303610         0   none ,l         * 
+                                  00303874         0   none ,l         * 
   p1_denorm
-                                  00303618         0   none ,l         * 
-  p1_norm_loop
-                                  00303620         0   none ,l         * 
-  end_p1_norm
-                                  00303626         0   none ,l         * 
-  p2_normalize
-                                  00303626         0   none ,l         * 
-  p2_norm_loop
-                                  0030362a         0   none ,l         * 
-  end_p2_norm
-                                  00303630         0   none ,l         * 
-  plus_zero
-                                  00303634         0   none ,l         * 
-  return_zero
-                                  00303636         0   none ,l         * 
-  return_parm1
-                                  0030363c         0   none ,l         * 
-  e_sftr7
-                                  00303644         0   none ,l         * 
-  e_sftr5
-                                  00303646         0   none ,l         * 
-  e_sftr3
-                                  00303648         0   none ,l         * 
-  e_sftr1
-                                  0030364a         0   none ,l         * 
-  e_sftr6
-                                  0030364e         0   none ,l         * 
-  e_sftr4
-                                  00303650         0   none ,l         * 
-  e_sftr2
-                                  00303652         0   none ,l         * 
-  e_sftr15
-                                  00303656         0   none ,l         * 
-  e_sftr13
-                                  0030365a         0   none ,l         * 
-  e_sftr11
-                                  0030365e         0   none ,l         * 
-  e_sftr9
-                                  00303662         0   none ,l         * 
-  e_sftr14
-                                  0030366c         0   none ,l         * 
-  e_sftr12
-                                  00303670         0   none ,l         * 
-  e_sftr10
-                                  00303674         0   none ,l         * 
-  e_sftr8
-                                  00303678         0   none ,l         * 
-  e_sftr23
-                                  0030367e         0   none ,l         * 
-  e_sftr21
-                                  00303682         0   none ,l         * 
-  e_sftr19
-                                  00303686         0   none ,l         * 
-  e_sftr17
-                                  0030368a         0   none ,l         * 
-  e_sftr22
-                                  00303694         0   none ,l         * 
-  e_sftr20
-                                  00303698         0   none ,l         * 
-  e_sftr18
-                                  0030369c         0   none ,l         * 
-  e_sftr16
-                                  003036a0         0   none ,l         * 
-  e_sftr25
-                                  003036a6         0   none ,l         * 
-  e_sftr24
-                                  003036b4         0   none ,l         * 
-  a_sftrtbl
-                                  003036c0         0   none ,l         * 
-  EXP_INF
-                                  00303728         0   none ,l         * 
-  HALF
-                                  0030372c         0   none ,l         * 
-  LRS
-                                  00303730         0   none ,l         * 
-  MAN_1
-                                  00303734         0   none ,l         * 
-  NaN
-                                  00303738         0   none ,l         * 
-FILE=r_divs
-                                  0030373c  003038d3       198
-  exception1
-                                  0030373c         0   none ,l         * 
-  exception2
-                                  00303748         0   none ,l         * 
-  exception3
-                                  00303750         0   none ,l         * 
-  normalize1
-                                  00303760         0   none ,l         * 
-  p1_norm_loop
-                                  00303764         0   none ,l         * 
-  end_p1_norm
-                                  0030376a         0   none ,l         * 
-  exception4
-                                  0030376e         0   none ,l         * 
-  p2_normalize
-                                  00303772         0   none ,l         * 
-  p2_norm_loop
-                                  00303776         0   none ,l         * 
-  end_p2_norm
-                                  0030377c         0   none ,l         * 
-  return_zero
-                                  00303780         0   none ,l         * 
-  return_inf
-                                  00303788         0   none ,l         * 
-  return_NaN
-                                  0030378e         0   none ,l         * 
-  __divs
-                                  00303794         0   none ,g         * 
-  exception_return3
-                                  003037c8         0   none ,l         * 
-  exception_return4
-                                  003037cc         0   none ,l         * 
-  make_result
-                                  00303848         0   none ,l         * 
-  end_calc_sticky
-                                  00303858         0   none ,l         * 
-  end_normalize
-                                  00303860         0   none ,l         * 
-  denormalize_loop
-                                  00303872         0   none ,l         * 
-  round_denormal
                                   0030387c         0   none ,l         * 
-  end_round_d
-                                  00303890         0   none ,l         * 
-  end_denormal
+  p1_norm_loop
+                                  00303884         0   none ,l         * 
+  end_p1_norm
+                                  0030388a         0   none ,l         * 
+  p2_normalize
+                                  0030388a         0   none ,l         * 
+  p2_norm_loop
+                                  0030388e         0   none ,l         * 
+  end_p2_norm
                                   00303894         0   none ,l         * 
-  round_carry
-                                  003038a4         0   none ,l         * 
-  end_round
-                                  003038a8         0   none ,l         * 
-  return_value
-                                  003038a8         0   none ,l         * 
-  return
-                                  003038b6         0   none ,l         * 
-  EXP_INF
-                                  003038c4         0   none ,l         * 
-  LRS
-                                  003038c8         0   none ,l         * 
-  MAN_1
-                                  003038cc         0   none ,l         * 
-  NaN
-                                  003038d0         0   none ,l         * 
-FILE=r_dtos
-                                  003038d4  003039af        dc
-  __dtos
-                                  003038d4         0   none ,g         * 
-  end_sticky
-                                  0030392a         0   none ,l         * 
-  denormalize_loop
-                                  00303932         0   none ,l         * 
-  end_denormal
-                                  0030393c         0   none ,l         * 
-  round_carry
-                                  0030394c         0   none ,l         * 
-  end_round
-                                  00303950         0   none ,l         * 
-  return
-                                  00303960         0   none ,l         * 
-  exception
-                                  0030396e         0   none ,l         * 
-  return_inf
-                                  00303976         0   none ,l         * 
-  return_NaN
-                                  0030397e         0   none ,l         * 
+  plus_zero
+                                  00303898         0   none ,l         * 
   return_zero
-                                  00303984         0   none ,l         * 
+                                  0030389a         0   none ,l         * 
+  return_parm1
+                                  003038a0         0   none ,l         * 
+  e_sftr7
+                                  003038a8         0   none ,l         * 
+  e_sftr5
+                                  003038aa         0   none ,l         * 
+  e_sftr3
+                                  003038ac         0   none ,l         * 
+  e_sftr1
+                                  003038ae         0   none ,l         * 
+  e_sftr6
+                                  003038b2         0   none ,l         * 
+  e_sftr4
+                                  003038b4         0   none ,l         * 
+  e_sftr2
+                                  003038b6         0   none ,l         * 
+  e_sftr15
+                                  003038ba         0   none ,l         * 
+  e_sftr13
+                                  003038be         0   none ,l         * 
+  e_sftr11
+                                  003038c2         0   none ,l         * 
+  e_sftr9
+                                  003038c6         0   none ,l         * 
+  e_sftr14
+                                  003038d0         0   none ,l         * 
+  e_sftr12
+                                  003038d4         0   none ,l         * 
+  e_sftr10
+                                  003038d8         0   none ,l         * 
+  e_sftr8
+                                  003038dc         0   none ,l         * 
+  e_sftr23
+                                  003038e2         0   none ,l         * 
+  e_sftr21
+                                  003038e6         0   none ,l         * 
+  e_sftr19
+                                  003038ea         0   none ,l         * 
+  e_sftr17
+                                  003038ee         0   none ,l         * 
+  e_sftr22
+                                  003038f8         0   none ,l         * 
+  e_sftr20
+                                  003038fc         0   none ,l         * 
+  e_sftr18
+                                  00303900         0   none ,l         * 
+  e_sftr16
+                                  00303904         0   none ,l         * 
+  e_sftr25
+                                  0030390a         0   none ,l         * 
+  e_sftr24
+                                  00303918         0   none ,l         * 
+  a_sftrtbl
+                                  00303924         0   none ,l         * 
   EXP_INF
                                   0030398c         0   none ,l         * 
-  MMASK
+  HALF
                                   00303990         0   none ,l         * 
-  SMASK
+  LRS
                                   00303994         0   none ,l         * 
-  DEF_BIAS
+  MAN_1
                                   00303998         0   none ,l         * 
-  MSB
-                                  0030399c         0   none ,l         * 
-  INFS
-                                  003039a0         0   none ,l         * 
-  CARRY_CHECK
-                                  003039a4         0   none ,l         * 
-  RET_INF
-                                  003039a8         0   none ,l         * 
   NaN
+                                  0030399c         0   none ,l         * 
+FILE=r_divs
+                                  003039a0  00303b37       198
+  exception1
+                                  003039a0         0   none ,l         * 
+  exception2
                                   003039ac         0   none ,l         * 
-FILE=r_eqs
-                                  003039b0  00303a17        68
-  __eqs
-                                  003039b0         0   none ,g         * 
-  exception_return1
-                                  003039d4         0   none ,l         * 
-  exception_return2
-                                  003039d8         0   none ,l         * 
-  exception_return3
-                                  003039dc         0   none ,l         * 
-  false
+  exception3
+                                  003039b4         0   none ,l         * 
+  normalize1
+                                  003039c4         0   none ,l         * 
+  p1_norm_loop
+                                  003039c8         0   none ,l         * 
+  end_p1_norm
+                                  003039ce         0   none ,l         * 
+  exception4
+                                  003039d2         0   none ,l         * 
+  p2_normalize
+                                  003039d6         0   none ,l         * 
+  p2_norm_loop
+                                  003039da         0   none ,l         * 
+  end_p2_norm
+                                  003039e0         0   none ,l         * 
+  return_zero
                                   003039e4         0   none ,l         * 
-  return
-                                  003039e6         0   none ,l         * 
-  exception1
+  return_inf
+                                  003039ec         0   none ,l         * 
+  return_NaN
                                   003039f2         0   none ,l         * 
-  exception2
-                                  003039fa         0   none ,l         * 
-  exception3
-                                  00303a02         0   none ,l         * 
-  EXP_INF
-                                  00303a14         0   none ,l         * 
-FILE=r_gts
-                                  00303a18  00303a8f        78
-  __gts
-                                  00303a18         0   none ,g         * 
-  exception_return1
-                                  00303a3c         0   none ,l         * 
-  exception_return2
-                                  00303a40         0   none ,l         * 
+  __divs
+                                  003039f8         0   none ,g         * 
   exception_return3
-                                  00303a44         0   none ,l         * 
-  minus
-                                  00303a52         0   none ,l         * 
-  sign_def
-                                  00303a58         0   none ,l         * 
-  return
-                                  00303a5c         0   none ,l         * 
-  exception1
-                                  00303a68         0   none ,l         * 
-  exception2
-                                  00303a70         0   none ,l         * 
-  exception3
-                                  00303a78         0   none ,l         * 
-  false
-                                  00303a88         0   none ,l         * 
-  EXP_INF
-                                  00303a8c         0   none ,l         * 
-FILE=r_lts
-                                  00303a90  00303b07        78
-  __lts
-                                  00303a90         0   none ,g         * 
-  exception_return1
-                                  00303ab4         0   none ,l         * 
-  exception_return2
-                                  00303ab8         0   none ,l         * 
-  exception_return3
-                                  00303abc         0   none ,l         * 
-  minus
-                                  00303aca         0   none ,l         * 
-  sign_def
-                                  00303ad0         0   none ,l         * 
-  return
-                                  00303ad4         0   none ,l         * 
-  exception1
-                                  00303ae0         0   none ,l         * 
-  exception2
-                                  00303ae8         0   none ,l         * 
-  exception3
-                                  00303af0         0   none ,l         * 
-  false
-                                  00303b00         0   none ,l         * 
-  EXP_INF
-                                  00303b04         0   none ,l         * 
-FILE=r_muls
-                                  00303b08  00303c47       140
-  __muls
-                                  00303b08         0   none ,g         * 
-  exception_return3
-                                  00303b40         0   none ,l         * 
+                                  00303a2c         0   none ,l         * 
   exception_return4
-                                  00303b44         0   none ,l         * 
+                                  00303a30         0   none ,l         * 
+  make_result
+                                  00303aac         0   none ,l         * 
   end_calc_sticky
-                                  00303b66         0   none ,l         * 
-  denormal
-                                  00303b76         0   none ,l         * 
+                                  00303abc         0   none ,l         * 
   end_normalize
-                                  00303b78         0   none ,l         * 
+                                  00303ac4         0   none ,l         * 
   denormalize_loop
-                                  00303b80         0   none ,l         * 
+                                  00303ad6         0   none ,l         * 
   round_denormal
-                                  00303b8a         0   none ,l         * 
+                                  00303ae0         0   none ,l         * 
   end_round_d
-                                  00303b9e         0   none ,l         * 
+                                  00303af4         0   none ,l         * 
   end_denormal
-                                  00303ba2         0   none ,l         * 
+                                  00303af8         0   none ,l         * 
   round_carry
-                                  00303bb2         0   none ,l         * 
+                                  00303b08         0   none ,l         * 
   end_round
-                                  00303bb6         0   none ,l         * 
+                                  00303b0c         0   none ,l         * 
   return_value
-                                  00303bb6         0   none ,l         * 
+                                  00303b0c         0   none ,l         * 
+  return
+                                  00303b1a         0   none ,l         * 
+  EXP_INF
+                                  00303b28         0   none ,l         * 
+  LRS
+                                  00303b2c         0   none ,l         * 
+  MAN_1
+                                  00303b30         0   none ,l         * 
+  NaN
+                                  00303b34         0   none ,l         * 
+FILE=r_dtos
+                                  00303b38  00303c13        dc
+  __dtos
+                                  00303b38         0   none ,g         * 
+  end_sticky
+                                  00303b8e         0   none ,l         * 
+  denormalize_loop
+                                  00303b96         0   none ,l         * 
+  end_denormal
+                                  00303ba0         0   none ,l         * 
+  round_carry
+                                  00303bb0         0   none ,l         * 
+  end_round
+                                  00303bb4         0   none ,l         * 
   return
                                   00303bc4         0   none ,l         * 
-  exception1
-                                  00303bd4         0   none ,l         * 
-  parm2_NaN_check
+  exception
+                                  00303bd2         0   none ,l         * 
+  return_inf
+                                  00303bda         0   none ,l         * 
+  return_NaN
+                                  00303be2         0   none ,l         * 
+  return_zero
                                   00303be8         0   none ,l         * 
-  exception2
+  EXP_INF
                                   00303bf0         0   none ,l         * 
-  exception3
-                                  00303c00         0   none ,l         * 
-  p1_norm_loop
-                                  00303c08         0   none ,l         * 
-  end_p1_norm
-                                  00303c0e         0   none ,l         * 
-  exception4
-                                  00303c12         0   none ,l         * 
-  p2_normalize
-                                  00303c16         0   none ,l         * 
-  p2_norm_loop
-                                  00303c1a         0   none ,l         * 
-  end_p2_norm
-                                  00303c20         0   none ,l         * 
-  return_zero
-                                  00303c24         0   none ,l         * 
-  return_inf
-                                  00303c2c         0   none ,l         * 
-  return_NaN
-                                  00303c32         0   none ,l         * 
-  EXP_INF
-                                  00303c38         0   none ,l         * 
-  LRS
-                                  00303c3c         0   none ,l         * 
-  MAN_1
-                                  00303c40         0   none ,l         * 
-  NaN
-                                  00303c44         0   none ,l         * 
-FILE=r_negs
-                                  00303c48  00303c4f         8
-  __negs
-                                  00303c48         0   none ,g         * 
-FILE=r_stod
-                                  00303c50  00303cd7        88
-  __stod
-                                  00303c50         0   none ,g         * 
-  exception_return
-                                  00303c6e         0   none ,l         * 
-  pack
-                                  00303c72         0   none ,l         * 
-  return
-                                  00303c8e         0   none ,l         * 
-  exception1
-                                  00303c9e         0   none ,l         * 
-  return_NaN
-                                  00303ca8         0   none ,l         * 
-  exception2
-                                  00303cae         0   none ,l         * 
-  p1_norm_loop
-                                  00303cb6         0   none ,l         * 
-  end_p1_norm
-                                  00303cbc         0   none ,l         * 
-  return_zero
-                                  00303cc0         0   none ,l         * 
-  EXP_INF
-                                  00303cc4         0   none ,l         * 
   MMASK
-                                  00303cc8         0   none ,l         * 
-  RET_INF
-                                  00303ccc         0   none ,l         * 
-  NAN
-                                  00303cd0         0   none ,l         * 
+                                  00303bf4         0   none ,l         * 
+  SMASK
+                                  00303bf8         0   none ,l         * 
   DEF_BIAS
-                                  00303cd4         0   none ,l         * 
-FILE=__q_fmvn
-                                  00303cd8  00303d7b        a4
-  __quick_evn_mvn
-                                  00303cd8         0   none ,g         * 
-  __quick_odd_mvn
-                                  00303ce4         0   none ,g         * 
-  A_FMVN_TBL
-                                  00303cf0         0   none ,l         * 
-  FMVN_64
-                                  00303cf6         0   none ,l         * 
-  FMVN_60
-                                  00303cfa         0   none ,l         * 
-  FMVN_56
-                                  00303cfe         0   none ,l         * 
-  FMVN_52
-                                  00303d02         0   none ,l         * 
-  FMVN_48
-                                  00303d06         0   none ,l         * 
-  FMVN_44
-                                  00303d0a         0   none ,l         * 
-  FMVN_40
-                                  00303d0e         0   none ,l         * 
-  FMVN_36
-                                  00303d12         0   none ,l         * 
-  FMVN_32
-                                  00303d16         0   none ,l         * 
-  FMVN_28
-                                  00303d1a         0   none ,l         * 
-  FMVN_24
-                                  00303d1e         0   none ,l         * 
-  FMVN_20
-                                  00303d22         0   none ,l         * 
-  FMVN_16
-                                  00303d26         0   none ,l         * 
-  FMVN_12
-                                  00303d2a         0   none ,l         * 
-  FMVN_8
-                                  00303d2e         0   none ,l         * 
-  FMVN_4
-                                  00303d32         0   none ,l         * 
-  FMVN_0
-                                  00303d34         0   none ,l         * 
-  FMVN_TBL
-                                  00303d38         0   none ,l         * 
-FILE=atoi
-                                  00303d7c  00303d87         c
-  _atoi
-                                  00303d7c         c   func ,g         * 
-FILE=memset
-                                  00303d88  00303d9f        18
-  _memset
-                                  00303d88        18   func ,g         * 
-FILE=sprintf
-                                  00303da0  00303ddb        3c
-  _sprintf
-                                  00303da0        3c   func ,g         * 
-FILE=strtod
-                                  00303ddc  00304337       55c
-  _strtod
-                                  00303ddc       55c   func ,g         * 
-FILE=_Bdel_cychdr
-                                  00304338  00304347        10
-  _Bdel_cychdr
-                                  00304338         0   none ,g         * 
-FILE=_Bdisp_AllClr_DDVRAM
-                                  00304348  00304357        10
-  _Bdisp_AllClr_DDVRAM
-                                  00304348         0   none ,g         * 
-FILE=_Bdisp_PutDisp_DD
-                                  00304358  00304367        10
-  _Bdisp_PutDisp_DD
-                                  00304358         0   none ,g         * 
-FILE=_BfileFLS_CloseFile
-                                  00304368  00304377        10
-  _BfileFLS_CloseFile
-                                  00304368         0   none ,g         * 
-FILE=_Bkey_Set_RepeatTime_Default
-                                  00304378  00304387        10
-  _Bkey_Set_RepeatTime_Default
-                                  00304378         0   none ,g         * 
-FILE=_CallbackAtQuitMainFunction
-                                  00304388  00304397        10
-  _CallbackAtQuitMainFunction
-                                  00304388         0   none ,g         * 
-FILE=_calloc
-                                  00304398  003043a7        10
-  _calloc
-                                  00304398         0   none ,g         * 
-FILE=_flsFindClose
-                                  003043a8  003043b7        10
-  _flsFindClose
-                                  003043a8         0   none ,g         * 
-FILE=_free
-                                  003043b8  003043c7        10
-  _free
-                                  003043b8         0   none ,g         * 
-FILE=_GLibAddinAplExecutionCheck
-                                  003043c8  003043d7        10
-  _GLibAddinAplExecutionCheck
-                                  003043c8         0   none ,g         * 
-FILE=_Hmem_SetMMU
-                                  003043d8  003043e7        10
-  _Hmem_SetMMU
-                                  003043d8         0   none ,g         * 
-FILE=_malloc
-                                  003043e8  003043f7        10
-  _malloc
-                                  003043e8         0   none ,g         * 
-FILE=dispbios
-                                  003043f8  0030456d       176
-  _PrintMini
-                                  003043f8        1c   func ,g         * 
-  _locate
-                                  00304414        28   func ,g         * 
-  _Bdisp_ReadArea_DD
-                                  0030443c       132   func ,g         * 
-FILE=timer
-                                  00304570  0030466f       100
-  _GetSDKLibraryVersion
-                                  00304570         6   func ,g         * 
-  _SetTimer
-                                  00304576        54   func ,g         * 
-  _KillTimer
-                                  003045ca        44   func ,g         * 
-  _Sleep
-                                  0030460e        62   func ,g         * 
-FILE=revolution
-                                  00304670  00305ec3      1854
-  _Init_SerialPort
-                                  00304670       286   func ,g         * 
-  _Start_SerialPort
-                                  003048f6        26   func ,g         * 
-  _SerialTransmit
-                                  0030491c        3c   func ,g         * 
-  _SerialReceive
-                                  00304958        20   func ,g         * 
-  _Stop_SerialPort
-                                  00304978        2a   func ,g         * 
-  _RTCReset
-                                  003049a2        14   func ,g         * 
-  _RTCStart
-                                  003049b6        14   func ,g         * 
-  _RTCStop
-                                  003049ca        14   func ,g         * 
-  _RTCSetYear
-                                  003049de        6a   func ,g         * 
-  _RTCSetMonth
-                                  00304a48        28   func ,g         * 
-  _RTCSetDayOfMonth
-                                  00304a70        30   func ,g         * 
-  _RTCSetDayOfWeek
-                                  00304aa0         c   func ,g         * 
-  _RTCSetHour
-                                  00304aac        30   func ,g         * 
-  _RTCSetMinute
-                                  00304adc        30   func ,g         * 
-  _RTCSetSecond
-                                  00304b0c        30   func ,g         * 
-  _RTCReadYear
-                                  00304b3c        68   func ,g         * 
-  _RTCReadMonth
-                                  00304ba4        3a   func ,g         * 
-  _RTCReadDayOfMonth
-                                  00304bde        38   func ,g         * 
-  _RTCReadDayOfWeek
-                                  00304c16        22   func ,g         * 
-  _RTCReadHour
-                                  00304c38        38   func ,g         * 
-  _RTCReadMinute
-                                  00304c70        38   func ,g         * 
-  _RTCReadSecond
-                                  00304ca8        38   func ,g         * 
-  _ReadPort_A
-                                  00304ce0         8   func ,g         * 
-  _ReadPort_B
-                                  00304ce8         8   func ,g         * 
-  _ReadPort_C
-                                  00304cf0         8   func ,g         * 
-  _ReadPort_D
-                                  00304cf8         8   func ,g         * 
-  _ReadPort_E
-                                  00304d00         8   func ,g         * 
-  _ReadPort_F
-                                  00304d08         8   func ,g         * 
-  _ReadPort_G
-                                  00304d10         8   func ,g         * 
-  _ReadPort_H
-                                  00304d18         8   func ,g         * 
-  _ReadPort_J
-                                  00304d20         8   func ,g         * 
-  _ReadPort_K
-                                  00304d28         8   func ,g         * 
-  _ReadPort_L
-                                  00304d30         8   func ,g         * 
-  _ReadPort_M
-                                  00304d38         8   func ,g         * 
-  _ReadPort_N
-                                  00304d40         8   func ,g         * 
-  _ReadPort_SCP
-                                  00304d48         8   func ,g         * 
-  _GrayInterrupt
-                                  00304d50        88   func ,g         * 
-  _GrayInterrupt3
-                                  00304dd8        c4   func ,g         * 
-  _GrayInit
-                                  00304e9c        60   func ,g         * 
-  _GrayInit3
-                                  00304efc        66   func ,g         * 
-  _GrayLinkBuffers
-                                  00304f62         8   func ,g         * 
-  _GrayLinkBuffers3
-                                  00304f6a         e   func ,g         * 
-  _GrayEnd
-                                  00304f78        36   func ,g         * 
-  _CPUSpeedNormal
-                                  00304fae        20   func ,g         * 
-  _CPUSpeedDouble
-                                  00304fce        26   func ,g         * 
-  _CPUSpeedTriple
-                                  00304ff4        70   func ,g         * 
-  _CPUSpeedQuadruple
-                                  00305064        28   func ,g         * 
-  _string_input
-                                  0030508c       e38   func ,g         * 
-FILE=__divls
-                                  00305ec4  00305f77        b4
-  __divls
-                                  00305ec4         0   none ,g         * 
-  divls_zero
-                                  00305f62         0   none ,l         * 
-  A_errno
-                                  00305f70         0   none ,l         * 
-  n_zerono
-                                  00305f74         0   none ,l         * 
-FILE=__modls
-                                  00305f78  0030603f        c8
-  __modls
-                                  00305f78         0   none ,g         * 
-  modls_L
-                                  0030601e         0   none ,l         * 
-  modls_zero
-                                  0030602a         0   none ,l         * 
-  A_errno
-                                  00306038         0   none ,l         * 
-  n_zerono
-                                  0030603c         0   none ,l         * 
-FILE=_fmtout
-                                  00306040  0030712b      10ec
-  __fmtout
-                                  00306040       768   func ,g         * 
-  __ltostr
-                                  003067a8       20a   func ,l         * 
-  __xtostr
-                                  003069b2       68e   func ,l         * 
-  __round
-                                  00307040        60   func ,l         * 
-  __putstr
-                                  003070a0        58   func ,l         * 
-  __putnull
-                                  003070f8        10   func ,l         * 
-  __puterr
-                                  00307108        24   func ,l         * 
-FILE=_strchek
-                                  0030712c  00307153        28
-  __strchek
-                                  0030712c        28   func ,g         * 
-FILE=_stx
-                                  00307154  0030720b        b8
-  __stx
-                                  00307154        b8   func ,g         * 
-FILE=strtol
-                                  0030720c  003074cf       2c4
-  _strtol
-                                  0030720c       2c4   func ,g         * 
-FILE=_Bcre_cychdr
-                                  003074d0  003074df        10
-  _Bcre_cychdr
-                                  003074d0         0   none ,g         * 
-FILE=_BSrl_DummyWAIT
-                                  003074e0  003074ef        10
-  _BSrl_DummyWAIT
-                                  003074e0         0   none ,g         * 
-FILE=_Bsta_cychdr
-                                  003074f0  003074ff        10
-  _Bsta_cychdr
-                                  003074f0         0   none ,g         * 
-FILE=_Bstp_cychdr
-                                  00307500  0030750f        10
-  _Bstp_cychdr
-                                  00307500         0   none ,g         * 
-FILE=_DD_GET
-                                  00307510  0030751f        10
-  _DD_GET
-                                  00307510         0   none ,g         * 
-FILE=_getkey
-                                  00307520  0030752f        10
-  _GetKey
-                                  00307520         0   none ,g         * 
-FILE=_locate
-                                  00307530  0030753f        10
-  _locate_OS
-                                  00307530         0   none ,g         * 
-FILE=_PrintMiniSd
-                                  00307540  0030754f        10
-  _PrintMiniSd
-                                  00307540         0   none ,g         * 
-FILE=revolution_asm
-                                  00307550  00307761       212
-  _CopyVRAM
-                                  00307550         0   none ,g         * 
-  CopyByte
-                                  00307560         0   none ,l         * 
-  _DrawAll
-                                  00307584         0   none ,g         * 
-  SelectLine
-                                  003075a2         0   none ,l         * 
-  WriteLine
-                                  003075b4         0   none ,l         * 
-  _Change_Contrast
-                                  003075dc         0   none ,g         * 
-  _Reset_Calc
-                                  003075f4         0   none ,g         * 
-  _Setup_Serial
-                                  00307600         0   none ,g         * 
-  _FastKeyDown
-                                  00307628         0   none ,g         * 
-  CodeCheck
-                                  00307660         0   none ,l         * 
-  PortCheck
-                                  00307664         0   none ,l         * 
-  CheckFlag
-                                  00307694         0   none ,l         * 
-  KeyFinish
-                                  0030769a         0   none ,l         * 
-  KeyExit
-                                  003076b0         0   none ,l         * 
-  KeyDatMov
-                                  003076c8         0   none ,l         * 
-  KeyDatLoop
-                                  003076d6         0   none ,l         * 
-  KeyDatFin
-                                  003076f8         0   none ,l         * 
-  KeyHelp
-                                  00307700         0   none ,l         * 
-  KeyAssist
-                                  00307704         0   none ,l         * 
-  KeyDataSt
-                                  00307708         0   none ,l         * 
-  _FastGetKey
-                                  00307718         0   none ,g         * 
-  StartLoop
-                                  00307730         0   none ,l         * 
-  CheckKey
-                                  00307734         0   none ,l         * 
-  LoopIncrement
-                                  00307740         0   none ,l         * 
-  LoopCheck
-                                  0030774c         0   none ,l         * 
-  FastGetKeyExit
-                                  00307752         0   none ,l         * 
-FILE=r_eqd
-                                  00307764  003077f7        94
-  __eqd
-                                  00307764         0   none ,g         * 
+                                  00303bfc         0   none ,l         * 
+  MSB
+                                  00303c00         0   none ,l         * 
+  INFS
+                                  00303c04         0   none ,l         * 
+  CARRY_CHECK
+                                  00303c08         0   none ,l         * 
+  RET_INF
+                                  00303c0c         0   none ,l         * 
+  NaN
+                                  00303c10         0   none ,l         * 
+FILE=r_eqs
+                                  00303c14  00303c7b        68
+  __eqs
+                                  00303c14         0   none ,g         * 
   exception_return1
-                                  00307796         0   none ,l         * 
+                                  00303c38         0   none ,l         * 
   exception_return2
-                                  0030779a         0   none ,l         * 
+                                  00303c3c         0   none ,l         * 
   exception_return3
-                                  0030779e         0   none ,l         * 
+                                  00303c40         0   none ,l         * 
   false
-                                  003077aa         0   none ,l         * 
+                                  00303c48         0   none ,l         * 
   return
-                                  003077ac         0   none ,l         * 
+                                  00303c4a         0   none ,l         * 
   exception1
-                                  003077c0         0   none ,l         * 
+                                  00303c56         0   none ,l         * 
   exception2
-                                  003077cc         0   none ,l         * 
+                                  00303c5e         0   none ,l         * 
   exception3
-                                  003077d8         0   none ,l         * 
+                                  00303c66         0   none ,l         * 
   EXP_INF
-                                  003077f0         0   none ,l         * 
-  MMASK
-                                  003077f4         0   none ,l         * 
-FILE=r_itod
-                                  003077f8  0030784b        54
-  __itod
-                                  003077f8         0   none ,g         * 
-  end_negate
-                                  0030780c         0   none ,l         * 
-  sftl_loop
-                                  0030780e         0   none ,l         * 
-  return
-                                  00307830         0   none ,l         * 
-  return_zero
-                                  00307840         0   none ,l         * 
-  EXP_32
-                                  00307848         0   none ,l         * 
-FILE=r_muld
-                                  0030784c  00307a5f       214
-  exception1
-                                  0030784c         0   none ,l         * 
-  parm2_NaN_check
-                                  00307868         0   none ,l         * 
-  exception2
-                                  00307874         0   none ,l         * 
-  exception3
-                                  0030788c         0   none ,l         * 
-  ex3
-                                  00307898         0   none ,l         * 
-  p1_norm_loop
-                                  003078a2         0   none ,l         * 
-  end_p1_norm
-                                  003078ac         0   none ,l         * 
-  exception4
-                                  003078b0         0   none ,l         * 
-  ex4
-                                  003078bc         0   none ,l         * 
-  p2_norm_loop
-                                  003078c6         0   none ,l         * 
-  end_p2_norm
-                                  003078d0         0   none ,l         * 
-  return_zero
-                                  003078d4         0   none ,l         * 
-  return_inf
-                                  003078de         0   none ,l         * 
-  return_NaN
-                                  003078e6         0   none ,l         * 
-  __muld
-                                  003078f0         0   none ,g         * 
-  exception_return3
-                                  00307946         0   none ,l         * 
-  exception_return4
-                                  0030794a         0   none ,l         * 
-  mul_man1
-                                  0030798c         0   none ,l         * 
-  end_normalize
-                                  003079b0         0   none ,l         * 
-  end_sticky
-                                  003079b6         0   none ,l         * 
-  denormalize_loop
-                                  003079be         0   none ,l         * 
-  round_denormal
-                                  003079ca         0   none ,l         * 
-  end_round_d
-                                  003079e0         0   none ,l         * 
-  end_denormal
-                                  003079e4         0   none ,l         * 
-  round_carry
-                                  003079f6         0   none ,l         * 
-  end_round
-                                  003079fc         0   none ,l         * 
-  return_value
-                                  003079fc         0   none ,l         * 
-  return
-                                  00307a1a         0   none ,l         * 
-  EXP_INF
-                                  00307a48         0   none ,l         * 
-  MMASK
-                                  00307a4c         0   none ,l         * 
-  MSB
-                                  00307a50         0   none ,l         * 
-  CARRY_CHECK
-                                  00307a54         0   none ,l         * 
-  BIAS
-                                  00307a58         0   none ,l         * 
-  DEN_CARRY
-                                  00307a5c         0   none ,l         * 
-FILE=__divlu
-                                  00307a60  00307b07        a8
-  __divlu
-                                  00307a60         0   none ,g         * 
-  divlu_zero
-                                  00307af2         0   none ,l         * 
-  A_errno
-                                  00307b00         0   none ,l         * 
-  n_zerono
-                                  00307b04         0   none ,l         * 
-FILE=__modlu
-                                  00307b08  00307bbf        b8
-  __modlu
-                                  00307b08         0   none ,g         * 
-  modlu_L
-                                  00307ba0         0   none ,l         * 
-  modlu_zero
-                                  00307ba8         0   none ,l         * 
-  A_errno
-                                  00307bb8         0   none ,l         * 
-  n_zerono
-                                  00307bbc         0   none ,l         * 
-FILE=_calcint
-                                  00307bc0  00307c6b        ac
-  __calcint
-                                  00307bc0        ac   func ,g         * 
-FILE=_calcxpo
-                                  00307c6c  00307f8f       324
-  __calcxpow
-                                  00307c6c       324   func ,g         * 
-FILE=_its
-                                  00307f90  003080bf       130
-  __its
-                                  00307f90       130   func ,g         * 
-FILE=_xti
-                                  003080c0  0030834f       290
-  __xti
-                                  003080c0       290   func ,g         * 
-  _la$264
-                                  00308298         0   none ,l         * 
-FILE=memcpy
-                                  00308350  0030840d        be
-  _memcpy
-                                  00308350        be   func ,g         * 
-FILE=strlen
-                                  00308410  0030841f        10
-  _strlen
-                                  00308410        10   func ,g         * 
-FILE=_add
-                                  00308420  0030847b        5c
-  __add
-                                  00308420        5c   func ,g         * 
-FILE=_allzero
-                                  0030847c  00308499        1e
-  __allzero
-                                  0030847c        1e   func ,g         * 
-FILE=_calcnpw
-                                  0030849c  0030859b       100
-  __calcnpw
-                                  0030849c       100   func ,g         * 
-FILE=_div64
-                                  0030859c  0030872f       194
-  __div64
-                                  0030859c       194   func ,g         * 
-FILE=_log10
-                                  00308730  003089f7       2c8
-  __log10
-                                  00308730        62   func ,g         * 
-  _frexp
-                                  00308792       12e   func ,l         * 
-  _modf
-                                  003088c0       138   func ,l         * 
-FILE=_lsft
-                                  003089f8  00308a3d        46
-  __lsft
-                                  003089f8        46   func ,g         * 
-FILE=_lsfts
-                                  00308a40  00308a8b        4c
-  __lsfts
-                                  00308a40        4c   func ,g         * 
-FILE=_mult64
-                                  00308a8c  00308afb        70
-  __mult64
-                                  00308a8c        70   func ,g         * 
-FILE=_packx
-                                  00308afc  00308b7b        80
-  __packx
-                                  00308afc        80   func ,g         * 
-FILE=_pow5
-                                  00308b7c  00308b9f        24
-  __pow5
-                                  00308b7c        24   func ,g         * 
-FILE=_power
-                                  00308ba0  00308cf3       154
-  __power
-                                  00308ba0       154   func ,g         * 
-FILE=_rnd
-                                  00308cf4  00308ddf        ec
-  __rnd
-                                  00308cf4        ec   func ,g         * 
-FILE=_rsft
-                                  00308de0  00308e29        4a
-  __rsft
-                                  00308de0        4a   func ,g         * 
-FILE=_rsfts
-                                  00308e2c  00308e81        56
-  __rsfts
-                                  00308e2c        56   func ,g         * 
-FILE=_setsbit
-                                  00308e84  00308f07        84
-  __setsbit
-                                  00308e84        84   func ,g         * 
-FILE=_sub
-                                  00308f08  00308f9b        94
-  __sub
-                                  00308f08        94   func ,g         * 
-FILE=_umemcmp
-                                  00308f9c  00308fcf        34
-  __umemcmp
-                                  00308f9c        34   func ,g         * 
-FILE=_unpack
-                                  00308fd0  0030906b        9c
-  __unpack
-                                  00308fd0        9c   func ,g         * 
-FILE=memcmp
-                                  0030906c  0030909f        34
-  _memcmp
-                                  0030906c        34   func ,g         * 
-FILE=r_addd
-                                  003090a0  0030942f       390
-  __subd
-                                  003090a0         0   none ,g         * 
-  __subdr
-                                  003090b8         0   none ,g         * 
-  exception1
-                                  003090d0         0   none ,l         * 
-  return_NaN
-                                  003090e4         0   none ,l         * 
-  return_inf
-                                  003090ec         0   none ,l         * 
-  exception2
-                                  003090f0         0   none ,l         * 
-  p2_denorm_check
-                                  00309104         0   none ,l         * 
-  p1_denorm
-                                  00309110         0   none ,l         * 
-  return_p2
-                                  0030911c         0   none ,l         * 
-  return_p1
-                                  00309124         0   none ,l         * 
-  p1_normalize
-                                  00309132         0   none ,l         * 
-  p1_norm_loop
-                                  0030913c         0   none ,l         * 
-  end_p1_norm
-                                  00309146         0   none ,l         * 
-  p2_normalize
-                                  00309146         0   none ,l         * 
-  p2_norm_loop
-                                  00309150         0   none ,l         * 
-  end_p2_norm
-                                  0030915a         0   none ,l         * 
-  swap_end
-                                  00309162         0   none ,l         * 
-  return_zero
-                                  00309166         0   none ,l         * 
-  __addd
-                                  00309170         0   none ,g         * 
-  sub_in
-                                  00309182         0   none ,l         * 
-  rotation
-                                  003091a2         0   none ,l         * 
-  exception_return
-                                  003091ce         0   none ,l         * 
-  sftr1
-                                  00309210         0   none ,l         * 
-  e_sftr31
-                                  00309214         0   none ,l         * 
-  e_sftr55
-                                  0030923a         0   none ,l         * 
-  sftr_loop
-                                  00309240         0   none ,l         * 
-  end_sftr
-                                  00309248         0   none ,l         * 
-  mantissa_sub
-                                  0030926c         0   none ,l         * 
-  man_sub1
-                                  00309274         0   none ,l         * 
-  normalize
-                                  00309282         0   none ,l         * 
-  norm32_end
-                                  0030928c         0   none ,l         * 
-  norm16_end
-                                  0030929c         0   none ,l         * 
-  over_norm
-                                  003092a2         0   none ,l         * 
-  overnorm_end
-                                  003092ce         0   none ,l         * 
-  norm_loop
-                                  003092d4         0   none ,l         * 
-  end_calc
-                                  003092fc         0   none ,l         * 
-  end_norm
-                                  003092fc         0   none ,l         * 
-  denormalize_loop
-                                  00309304         0   none ,l         * 
-  round
-                                  0030930c         0   none ,l         * 
-  end_denormal
-                                  0030930c         0   none ,l         * 
-  round_carry
-                                  00309324         0   none ,l         * 
-  end_round
-                                  0030932a         0   none ,l         * 
-  return_value
-                                  0030932a         0   none ,l         * 
-  return
-                                  00309348         0   none ,l         * 
-  plus_zero
-                                  00309368         0   none ,l         * 
-  swap
-                                  00309372         0   none ,l         * 
-  EXP_INF
-                                  0030938c         0   none ,l         * 
-  MMASK
-                                  00309390         0   none ,l         * 
-  MSB
-                                  00309394         0   none ,l         * 
-  LOWMASK
-                                  00309398         0   none ,l         * 
-  CARRY_CHECK
-                                  0030939c         0   none ,l         * 
-  NORMAL
-                                  003093a0         0   none ,l         * 
-  SIGN
-                                  003093a4         0   none ,l         * 
-  HALF
-                                  003093a8         0   none ,l         * 
-  sftrtbl
-                                  003093ac         0   none ,l         * 
-FILE=r_dtoi
-                                  00309430  003094bb        8c
-  __dtou
-                                  00309430         0   none ,g         * 
-  __dtoi
-                                  00309430         0   none ,g         * 
-  loop_sftl
-                                  00309470         0   none ,l         * 
-  shift_low
-                                  0030947a         0   none ,l         * 
-  shift_low1
-                                  00309482         0   none ,l         * 
-  shift_r
-                                  0030948c         0   none ,l         * 
-  shift_r1
-                                  0030948e         0   none ,l         * 
-  end_shift
-                                  00309494         0   none ,l         * 
-  return
-                                  0030949a         0   none ,l         * 
-  end_nagate
-                                  0030949a         0   none ,l         * 
-  return_zero
-                                  003094a8         0   none ,l         * 
-  EXP_INF
-                                  003094ac         0   none ,l         * 
-  MMASK
-                                  003094b0         0   none ,l         * 
-  MSB
-                                  003094b4         0   none ,l         * 
-  BIAS
-                                  003094b8         0   none ,l         * 
-FILE=r_ltd
-                                  003094bc  00309563        a8
-  __ltd
-                                  003094bc         0   none ,g         * 
+                                  00303c78         0   none ,l         * 
+FILE=r_gts
+                                  00303c7c  00303cf3        78
+  __gts
+                                  00303c7c         0   none ,g         * 
   exception_return1
-                                  003094ee         0   none ,l         * 
+                                  00303ca0         0   none ,l         * 
   exception_return2
-                                  003094f2         0   none ,l         * 
+                                  00303ca4         0   none ,l         * 
   exception_return3
-                                  003094f6         0   none ,l         * 
+                                  00303ca8         0   none ,l         * 
   minus
-                                  00309508         0   none ,l         * 
+                                  00303cb6         0   none ,l         * 
   sign_def
-                                  00309510         0   none ,l         * 
+                                  00303cbc         0   none ,l         * 
   return
-                                  00309514         0   none ,l         * 
+                                  00303cc0         0   none ,l         * 
   exception1
-                                  00309528         0   none ,l         * 
+                                  00303ccc         0   none ,l         * 
   exception2
-                                  00309534         0   none ,l         * 
+                                  00303cd4         0   none ,l         * 
   exception3
-                                  00309540         0   none ,l         * 
+                                  00303cdc         0   none ,l         * 
   false
-                                  00309558         0   none ,l         * 
+                                  00303cec         0   none ,l         * 
   EXP_INF
-                                  0030955c         0   none ,l         * 
-  MMASK
-                                  00309560         0   none ,l         * 
-FILE=r_ned
-                                  00309564  003095f7        94
-  __ned
-                                  00309564         0   none ,g         * 
+                                  00303cf0         0   none ,l         * 
+FILE=r_lts
+                                  00303cf4  00303d6b        78
+  __lts
+                                  00303cf4         0   none ,g         * 
   exception_return1
-                                  00309596         0   none ,l         * 
+                                  00303d18         0   none ,l         * 
   exception_return2
-                                  0030959a         0   none ,l         * 
+                                  00303d1c         0   none ,l         * 
   exception_return3
-                                  0030959e         0   none ,l         * 
-  true
-                                  003095aa         0   none ,l         * 
+                                  00303d20         0   none ,l         * 
+  minus
+                                  00303d2e         0   none ,l         * 
+  sign_def
+                                  00303d34         0   none ,l         * 
+  return
+                                  00303d38         0   none ,l         * 
+  exception1
+                                  00303d44         0   none ,l         * 
+  exception2
+                                  00303d4c         0   none ,l         * 
+  exception3
+                                  00303d54         0   none ,l         * 
+  false
+                                  00303d64         0   none ,l         * 
+  EXP_INF
+                                  00303d68         0   none ,l         * 
+FILE=r_muls
+                                  00303d6c  00303eab       140
+  __muls
+                                  00303d6c         0   none ,g         * 
+  exception_return3
+                                  00303da4         0   none ,l         * 
+  exception_return4
+                                  00303da8         0   none ,l         * 
+  end_calc_sticky
+                                  00303dca         0   none ,l         * 
+  denormal
+                                  00303dda         0   none ,l         * 
+  end_normalize
+                                  00303ddc         0   none ,l         * 
+  denormalize_loop
+                                  00303de4         0   none ,l         * 
+  round_denormal
+                                  00303dee         0   none ,l         * 
+  end_round_d
+                                  00303e02         0   none ,l         * 
+  end_denormal
+                                  00303e06         0   none ,l         * 
+  round_carry
+                                  00303e16         0   none ,l         * 
+  end_round
+                                  00303e1a         0   none ,l         * 
+  return_value
+                                  00303e1a         0   none ,l         * 
+  return
+                                  00303e28         0   none ,l         * 
+  exception1
+                                  00303e38         0   none ,l         * 
+  parm2_NaN_check
+                                  00303e4c         0   none ,l         * 
+  exception2
+                                  00303e54         0   none ,l         * 
+  exception3
+                                  00303e64         0   none ,l         * 
+  p1_norm_loop
+                                  00303e6c         0   none ,l         * 
+  end_p1_norm
+                                  00303e72         0   none ,l         * 
+  exception4
+                                  00303e76         0   none ,l         * 
+  p2_normalize
+                                  00303e7a         0   none ,l         * 
+  p2_norm_loop
+                                  00303e7e         0   none ,l         * 
+  end_p2_norm
+                                  00303e84         0   none ,l         * 
+  return_zero
+                                  00303e88         0   none ,l         * 
+  return_inf
+                                  00303e90         0   none ,l         * 
+  return_NaN
+                                  00303e96         0   none ,l         * 
+  EXP_INF
+                                  00303e9c         0   none ,l         * 
+  LRS
+                                  00303ea0         0   none ,l         * 
+  MAN_1
+                                  00303ea4         0   none ,l         * 
+  NaN
+                                  00303ea8         0   none ,l         * 
+FILE=r_negs
+                                  00303eac  00303eb3         8
+  __negs
+                                  00303eac         0   none ,g         * 
+FILE=r_stod
+                                  00303eb4  00303f3b        88
+  __stod
+                                  00303eb4         0   none ,g         * 
+  exception_return
+                                  00303ed2         0   none ,l         * 
+  pack
+                                  00303ed6         0   none ,l         * 
+  return
+                                  00303ef2         0   none ,l         * 
+  exception1
+                                  00303f02         0   none ,l         * 
+  return_NaN
+                                  00303f0c         0   none ,l         * 
+  exception2
+                                  00303f12         0   none ,l         * 
+  p1_norm_loop
+                                  00303f1a         0   none ,l         * 
+  end_p1_norm
+                                  00303f20         0   none ,l         * 
+  return_zero
+                                  00303f24         0   none ,l         * 
+  EXP_INF
+                                  00303f28         0   none ,l         * 
+  MMASK
+                                  00303f2c         0   none ,l         * 
+  RET_INF
+                                  00303f30         0   none ,l         * 
+  NAN
+                                  00303f34         0   none ,l         * 
+  DEF_BIAS
+                                  00303f38         0   none ,l         * 
+FILE=__q_fmvn
+                                  00303f3c  00303fdf        a4
+  __quick_evn_mvn
+                                  00303f3c         0   none ,g         * 
+  __quick_odd_mvn
+                                  00303f48         0   none ,g         * 
+  A_FMVN_TBL
+                                  00303f54         0   none ,l         * 
+  FMVN_64
+                                  00303f5a         0   none ,l         * 
+  FMVN_60
+                                  00303f5e         0   none ,l         * 
+  FMVN_56
+                                  00303f62         0   none ,l         * 
+  FMVN_52
+                                  00303f66         0   none ,l         * 
+  FMVN_48
+                                  00303f6a         0   none ,l         * 
+  FMVN_44
+                                  00303f6e         0   none ,l         * 
+  FMVN_40
+                                  00303f72         0   none ,l         * 
+  FMVN_36
+                                  00303f76         0   none ,l         * 
+  FMVN_32
+                                  00303f7a         0   none ,l         * 
+  FMVN_28
+                                  00303f7e         0   none ,l         * 
+  FMVN_24
+                                  00303f82         0   none ,l         * 
+  FMVN_20
+                                  00303f86         0   none ,l         * 
+  FMVN_16
+                                  00303f8a         0   none ,l         * 
+  FMVN_12
+                                  00303f8e         0   none ,l         * 
+  FMVN_8
+                                  00303f92         0   none ,l         * 
+  FMVN_4
+                                  00303f96         0   none ,l         * 
+  FMVN_0
+                                  00303f98         0   none ,l         * 
+  FMVN_TBL
+                                  00303f9c         0   none ,l         * 
+FILE=atoi
+                                  00303fe0  00303feb         c
+  _atoi
+                                  00303fe0         c   func ,g         * 
+FILE=memset
+                                  00303fec  00304003        18
+  _memset
+                                  00303fec        18   func ,g         * 
+FILE=sprintf
+                                  00304004  0030403f        3c
+  _sprintf
+                                  00304004        3c   func ,g         * 
+FILE=strtod
+                                  00304040  0030459b       55c
+  _strtod
+                                  00304040       55c   func ,g         * 
+FILE=_Bdel_cychdr
+                                  0030459c  003045ab        10
+  _Bdel_cychdr
+                                  0030459c         0   none ,g         * 
+FILE=_Bdisp_AllClr_DDVRAM
+                                  003045ac  003045bb        10
+  _Bdisp_AllClr_DDVRAM
+                                  003045ac         0   none ,g         * 
+FILE=_Bdisp_PutDisp_DD
+                                  003045bc  003045cb        10
+  _Bdisp_PutDisp_DD
+                                  003045bc         0   none ,g         * 
+FILE=_BfileFLS_CloseFile
+                                  003045cc  003045db        10
+  _BfileFLS_CloseFile
+                                  003045cc         0   none ,g         * 
+FILE=_Bkey_Set_RepeatTime_Default
+                                  003045dc  003045eb        10
+  _Bkey_Set_RepeatTime_Default
+                                  003045dc         0   none ,g         * 
+FILE=_CallbackAtQuitMainFunction
+                                  003045ec  003045fb        10
+  _CallbackAtQuitMainFunction
+                                  003045ec         0   none ,g         * 
+FILE=_calloc
+                                  003045fc  0030460b        10
+  _calloc
+                                  003045fc         0   none ,g         * 
+FILE=_flsFindClose
+                                  0030460c  0030461b        10
+  _flsFindClose
+                                  0030460c         0   none ,g         * 
+FILE=_free
+                                  0030461c  0030462b        10
+  _free
+                                  0030461c         0   none ,g         * 
+FILE=_GLibAddinAplExecutionCheck
+                                  0030462c  0030463b        10
+  _GLibAddinAplExecutionCheck
+                                  0030462c         0   none ,g         * 
+FILE=_Hmem_SetMMU
+                                  0030463c  0030464b        10
+  _Hmem_SetMMU
+                                  0030463c         0   none ,g         * 
+FILE=_malloc
+                                  0030464c  0030465b        10
+  _malloc
+                                  0030464c         0   none ,g         * 
+FILE=dispbios
+                                  0030465c  003047d1       176
+  _PrintMini
+                                  0030465c        1c   func ,g         * 
+  _locate
+                                  00304678        28   func ,g         * 
+  _Bdisp_ReadArea_DD
+                                  003046a0       132   func ,g         * 
+FILE=timer
+                                  003047d4  003048d3       100
+  _GetSDKLibraryVersion
+                                  003047d4         6   func ,g         * 
+  _SetTimer
+                                  003047da        54   func ,g         * 
+  _KillTimer
+                                  0030482e        44   func ,g         * 
+  _Sleep
+                                  00304872        62   func ,g         * 
+FILE=revolution
+                                  003048d4  00306127      1854
+  _Init_SerialPort
+                                  003048d4       286   func ,g         * 
+  _Start_SerialPort
+                                  00304b5a        26   func ,g         * 
+  _SerialTransmit
+                                  00304b80        3c   func ,g         * 
+  _SerialReceive
+                                  00304bbc        20   func ,g         * 
+  _Stop_SerialPort
+                                  00304bdc        2a   func ,g         * 
+  _RTCReset
+                                  00304c06        14   func ,g         * 
+  _RTCStart
+                                  00304c1a        14   func ,g         * 
+  _RTCStop
+                                  00304c2e        14   func ,g         * 
+  _RTCSetYear
+                                  00304c42        6a   func ,g         * 
+  _RTCSetMonth
+                                  00304cac        28   func ,g         * 
+  _RTCSetDayOfMonth
+                                  00304cd4        30   func ,g         * 
+  _RTCSetDayOfWeek
+                                  00304d04         c   func ,g         * 
+  _RTCSetHour
+                                  00304d10        30   func ,g         * 
+  _RTCSetMinute
+                                  00304d40        30   func ,g         * 
+  _RTCSetSecond
+                                  00304d70        30   func ,g         * 
+  _RTCReadYear
+                                  00304da0        68   func ,g         * 
+  _RTCReadMonth
+                                  00304e08        3a   func ,g         * 
+  _RTCReadDayOfMonth
+                                  00304e42        38   func ,g         * 
+  _RTCReadDayOfWeek
+                                  00304e7a        22   func ,g         * 
+  _RTCReadHour
+                                  00304e9c        38   func ,g         * 
+  _RTCReadMinute
+                                  00304ed4        38   func ,g         * 
+  _RTCReadSecond
+                                  00304f0c        38   func ,g         * 
+  _ReadPort_A
+                                  00304f44         8   func ,g         * 
+  _ReadPort_B
+                                  00304f4c         8   func ,g         * 
+  _ReadPort_C
+                                  00304f54         8   func ,g         * 
+  _ReadPort_D
+                                  00304f5c         8   func ,g         * 
+  _ReadPort_E
+                                  00304f64         8   func ,g         * 
+  _ReadPort_F
+                                  00304f6c         8   func ,g         * 
+  _ReadPort_G
+                                  00304f74         8   func ,g         * 
+  _ReadPort_H
+                                  00304f7c         8   func ,g         * 
+  _ReadPort_J
+                                  00304f84         8   func ,g         * 
+  _ReadPort_K
+                                  00304f8c         8   func ,g         * 
+  _ReadPort_L
+                                  00304f94         8   func ,g         * 
+  _ReadPort_M
+                                  00304f9c         8   func ,g         * 
+  _ReadPort_N
+                                  00304fa4         8   func ,g         * 
+  _ReadPort_SCP
+                                  00304fac         8   func ,g         * 
+  _GrayInterrupt
+                                  00304fb4        88   func ,g         * 
+  _GrayInterrupt3
+                                  0030503c        c4   func ,g         * 
+  _GrayInit
+                                  00305100        60   func ,g         * 
+  _GrayInit3
+                                  00305160        66   func ,g         * 
+  _GrayLinkBuffers
+                                  003051c6         8   func ,g         * 
+  _GrayLinkBuffers3
+                                  003051ce         e   func ,g         * 
+  _GrayEnd
+                                  003051dc        36   func ,g         * 
+  _CPUSpeedNormal
+                                  00305212        20   func ,g         * 
+  _CPUSpeedDouble
+                                  00305232        26   func ,g         * 
+  _CPUSpeedTriple
+                                  00305258        70   func ,g         * 
+  _CPUSpeedQuadruple
+                                  003052c8        28   func ,g         * 
+  _string_input
+                                  003052f0       e38   func ,g         * 
+FILE=__divls
+                                  00306128  003061db        b4
+  __divls
+                                  00306128         0   none ,g         * 
+  divls_zero
+                                  003061c6         0   none ,l         * 
+  A_errno
+                                  003061d4         0   none ,l         * 
+  n_zerono
+                                  003061d8         0   none ,l         * 
+FILE=__modls
+                                  003061dc  003062a3        c8
+  __modls
+                                  003061dc         0   none ,g         * 
+  modls_L
+                                  00306282         0   none ,l         * 
+  modls_zero
+                                  0030628e         0   none ,l         * 
+  A_errno
+                                  0030629c         0   none ,l         * 
+  n_zerono
+                                  003062a0         0   none ,l         * 
+FILE=_fmtout
+                                  003062a4  0030738f      10ec
+  __fmtout
+                                  003062a4       768   func ,g         * 
+  __ltostr
+                                  00306a0c       20a   func ,l         * 
+  __xtostr
+                                  00306c16       68e   func ,l         * 
+  __round
+                                  003072a4        60   func ,l         * 
+  __putstr
+                                  00307304        58   func ,l         * 
+  __putnull
+                                  0030735c        10   func ,l         * 
+  __puterr
+                                  0030736c        24   func ,l         * 
+FILE=_strchek
+                                  00307390  003073b7        28
+  __strchek
+                                  00307390        28   func ,g         * 
+FILE=_stx
+                                  003073b8  0030746f        b8
+  __stx
+                                  003073b8        b8   func ,g         * 
+FILE=strtol
+                                  00307470  00307733       2c4
+  _strtol
+                                  00307470       2c4   func ,g         * 
+FILE=_Bcre_cychdr
+                                  00307734  00307743        10
+  _Bcre_cychdr
+                                  00307734         0   none ,g         * 
+FILE=_BSrl_DummyWAIT
+                                  00307744  00307753        10
+  _BSrl_DummyWAIT
+                                  00307744         0   none ,g         * 
+FILE=_Bsta_cychdr
+                                  00307754  00307763        10
+  _Bsta_cychdr
+                                  00307754         0   none ,g         * 
+FILE=_Bstp_cychdr
+                                  00307764  00307773        10
+  _Bstp_cychdr
+                                  00307764         0   none ,g         * 
+FILE=_DD_GET
+                                  00307774  00307783        10
+  _DD_GET
+                                  00307774         0   none ,g         * 
+FILE=_getkey
+                                  00307784  00307793        10
+  _GetKey
+                                  00307784         0   none ,g         * 
+FILE=_locate
+                                  00307794  003077a3        10
+  _locate_OS
+                                  00307794         0   none ,g         * 
+FILE=_PrintMiniSd
+                                  003077a4  003077b3        10
+  _PrintMiniSd
+                                  003077a4         0   none ,g         * 
+FILE=revolution_asm
+                                  003077b4  003079c5       212
+  _CopyVRAM
+                                  003077b4         0   none ,g         * 
+  CopyByte
+                                  003077c4         0   none ,l         * 
+  _DrawAll
+                                  003077e8         0   none ,g         * 
+  SelectLine
+                                  00307806         0   none ,l         * 
+  WriteLine
+                                  00307818         0   none ,l         * 
+  _Change_Contrast
+                                  00307840         0   none ,g         * 
+  _Reset_Calc
+                                  00307858         0   none ,g         * 
+  _Setup_Serial
+                                  00307864         0   none ,g         * 
+  _FastKeyDown
+                                  0030788c         0   none ,g         * 
+  CodeCheck
+                                  003078c4         0   none ,l         * 
+  PortCheck
+                                  003078c8         0   none ,l         * 
+  CheckFlag
+                                  003078f8         0   none ,l         * 
+  KeyFinish
+                                  003078fe         0   none ,l         * 
+  KeyExit
+                                  00307914         0   none ,l         * 
+  KeyDatMov
+                                  0030792c         0   none ,l         * 
+  KeyDatLoop
+                                  0030793a         0   none ,l         * 
+  KeyDatFin
+                                  0030795c         0   none ,l         * 
+  KeyHelp
+                                  00307964         0   none ,l         * 
+  KeyAssist
+                                  00307968         0   none ,l         * 
+  KeyDataSt
+                                  0030796c         0   none ,l         * 
+  _FastGetKey
+                                  0030797c         0   none ,g         * 
+  StartLoop
+                                  00307994         0   none ,l         * 
+  CheckKey
+                                  00307998         0   none ,l         * 
+  LoopIncrement
+                                  003079a4         0   none ,l         * 
+  LoopCheck
+                                  003079b0         0   none ,l         * 
+  FastGetKeyExit
+                                  003079b6         0   none ,l         * 
+FILE=r_eqd
+                                  003079c8  00307a5b        94
+  __eqd
+                                  003079c8         0   none ,g         * 
+  exception_return1
+                                  003079fa         0   none ,l         * 
+  exception_return2
+                                  003079fe         0   none ,l         * 
+  exception_return3
+                                  00307a02         0   none ,l         * 
+  false
+                                  00307a0e         0   none ,l         * 
+  return
+                                  00307a10         0   none ,l         * 
+  exception1
+                                  00307a24         0   none ,l         * 
+  exception2
+                                  00307a30         0   none ,l         * 
+  exception3
+                                  00307a3c         0   none ,l         * 
+  EXP_INF
+                                  00307a54         0   none ,l         * 
+  MMASK
+                                  00307a58         0   none ,l         * 
+FILE=r_itod
+                                  00307a5c  00307aaf        54
+  __itod
+                                  00307a5c         0   none ,g         * 
+  end_negate
+                                  00307a70         0   none ,l         * 
+  sftl_loop
+                                  00307a72         0   none ,l         * 
+  return
+                                  00307a94         0   none ,l         * 
+  return_zero
+                                  00307aa4         0   none ,l         * 
+  EXP_32
+                                  00307aac         0   none ,l         * 
+FILE=r_muld
+                                  00307ab0  00307cc3       214
+  exception1
+                                  00307ab0         0   none ,l         * 
+  parm2_NaN_check
+                                  00307acc         0   none ,l         * 
+  exception2
+                                  00307ad8         0   none ,l         * 
+  exception3
+                                  00307af0         0   none ,l         * 
+  ex3
+                                  00307afc         0   none ,l         * 
+  p1_norm_loop
+                                  00307b06         0   none ,l         * 
+  end_p1_norm
+                                  00307b10         0   none ,l         * 
+  exception4
+                                  00307b14         0   none ,l         * 
+  ex4
+                                  00307b20         0   none ,l         * 
+  p2_norm_loop
+                                  00307b2a         0   none ,l         * 
+  end_p2_norm
+                                  00307b34         0   none ,l         * 
+  return_zero
+                                  00307b38         0   none ,l         * 
+  return_inf
+                                  00307b42         0   none ,l         * 
+  return_NaN
+                                  00307b4a         0   none ,l         * 
+  __muld
+                                  00307b54         0   none ,g         * 
+  exception_return3
+                                  00307baa         0   none ,l         * 
+  exception_return4
+                                  00307bae         0   none ,l         * 
+  mul_man1
+                                  00307bf0         0   none ,l         * 
+  end_normalize
+                                  00307c14         0   none ,l         * 
+  end_sticky
+                                  00307c1a         0   none ,l         * 
+  denormalize_loop
+                                  00307c22         0   none ,l         * 
+  round_denormal
+                                  00307c2e         0   none ,l         * 
+  end_round_d
+                                  00307c44         0   none ,l         * 
+  end_denormal
+                                  00307c48         0   none ,l         * 
+  round_carry
+                                  00307c5a         0   none ,l         * 
+  end_round
+                                  00307c60         0   none ,l         * 
+  return_value
+                                  00307c60         0   none ,l         * 
+  return
+                                  00307c7e         0   none ,l         * 
+  EXP_INF
+                                  00307cac         0   none ,l         * 
+  MMASK
+                                  00307cb0         0   none ,l         * 
+  MSB
+                                  00307cb4         0   none ,l         * 
+  CARRY_CHECK
+                                  00307cb8         0   none ,l         * 
+  BIAS
+                                  00307cbc         0   none ,l         * 
+  DEN_CARRY
+                                  00307cc0         0   none ,l         * 
+FILE=__divlu
+                                  00307cc4  00307d6b        a8
+  __divlu
+                                  00307cc4         0   none ,g         * 
+  divlu_zero
+                                  00307d56         0   none ,l         * 
+  A_errno
+                                  00307d64         0   none ,l         * 
+  n_zerono
+                                  00307d68         0   none ,l         * 
+FILE=__modlu
+                                  00307d6c  00307e23        b8
+  __modlu
+                                  00307d6c         0   none ,g         * 
+  modlu_L
+                                  00307e04         0   none ,l         * 
+  modlu_zero
+                                  00307e0c         0   none ,l         * 
+  A_errno
+                                  00307e1c         0   none ,l         * 
+  n_zerono
+                                  00307e20         0   none ,l         * 
+FILE=_calcint
+                                  00307e24  00307ecf        ac
+  __calcint
+                                  00307e24        ac   func ,g         * 
+FILE=_calcxpo
+                                  00307ed0  003081f3       324
+  __calcxpow
+                                  00307ed0       324   func ,g         * 
+FILE=_its
+                                  003081f4  00308323       130
+  __its
+                                  003081f4       130   func ,g         * 
+FILE=_xti
+                                  00308324  003085b3       290
+  __xti
+                                  00308324       290   func ,g         * 
+  _la$264
+                                  003084fc         0   none ,l         * 
+FILE=memcpy
+                                  003085b4  00308671        be
+  _memcpy
+                                  003085b4        be   func ,g         * 
+FILE=strlen
+                                  00308674  00308683        10
+  _strlen
+                                  00308674        10   func ,g         * 
+FILE=_add
+                                  00308684  003086df        5c
+  __add
+                                  00308684        5c   func ,g         * 
+FILE=_allzero
+                                  003086e0  003086fd        1e
+  __allzero
+                                  003086e0        1e   func ,g         * 
+FILE=_calcnpw
+                                  00308700  003087ff       100
+  __calcnpw
+                                  00308700       100   func ,g         * 
+FILE=_div64
+                                  00308800  00308993       194
+  __div64
+                                  00308800       194   func ,g         * 
+FILE=_log10
+                                  00308994  00308c5b       2c8
+  __log10
+                                  00308994        62   func ,g         * 
+  _frexp
+                                  003089f6       12e   func ,l         * 
+  _modf
+                                  00308b24       138   func ,l         * 
+FILE=_lsft
+                                  00308c5c  00308ca1        46
+  __lsft
+                                  00308c5c        46   func ,g         * 
+FILE=_lsfts
+                                  00308ca4  00308cef        4c
+  __lsfts
+                                  00308ca4        4c   func ,g         * 
+FILE=_mult64
+                                  00308cf0  00308d5f        70
+  __mult64
+                                  00308cf0        70   func ,g         * 
+FILE=_packx
+                                  00308d60  00308ddf        80
+  __packx
+                                  00308d60        80   func ,g         * 
+FILE=_pow5
+                                  00308de0  00308e03        24
+  __pow5
+                                  00308de0        24   func ,g         * 
+FILE=_power
+                                  00308e04  00308f57       154
+  __power
+                                  00308e04       154   func ,g         * 
+FILE=_rnd
+                                  00308f58  00309043        ec
+  __rnd
+                                  00308f58        ec   func ,g         * 
+FILE=_rsft
+                                  00309044  0030908d        4a
+  __rsft
+                                  00309044        4a   func ,g         * 
+FILE=_rsfts
+                                  00309090  003090e5        56
+  __rsfts
+                                  00309090        56   func ,g         * 
+FILE=_setsbit
+                                  003090e8  0030916b        84
+  __setsbit
+                                  003090e8        84   func ,g         * 
+FILE=_sub
+                                  0030916c  003091ff        94
+  __sub
+                                  0030916c        94   func ,g         * 
+FILE=_umemcmp
+                                  00309200  00309233        34
+  __umemcmp
+                                  00309200        34   func ,g         * 
+FILE=_unpack
+                                  00309234  003092cf        9c
+  __unpack
+                                  00309234        9c   func ,g         * 
+FILE=memcmp
+                                  003092d0  00309303        34
+  _memcmp
+                                  003092d0        34   func ,g         * 
+FILE=r_addd
+                                  00309304  00309693       390
+  __subd
+                                  00309304         0   none ,g         * 
+  __subdr
+                                  0030931c         0   none ,g         * 
+  exception1
+                                  00309334         0   none ,l         * 
+  return_NaN
+                                  00309348         0   none ,l         * 
+  return_inf
+                                  00309350         0   none ,l         * 
+  exception2
+                                  00309354         0   none ,l         * 
+  p2_denorm_check
+                                  00309368         0   none ,l         * 
+  p1_denorm
+                                  00309374         0   none ,l         * 
+  return_p2
+                                  00309380         0   none ,l         * 
+  return_p1
+                                  00309388         0   none ,l         * 
+  p1_normalize
+                                  00309396         0   none ,l         * 
+  p1_norm_loop
+                                  003093a0         0   none ,l         * 
+  end_p1_norm
+                                  003093aa         0   none ,l         * 
+  p2_normalize
+                                  003093aa         0   none ,l         * 
+  p2_norm_loop
+                                  003093b4         0   none ,l         * 
+  end_p2_norm
+                                  003093be         0   none ,l         * 
+  swap_end
+                                  003093c6         0   none ,l         * 
+  return_zero
+                                  003093ca         0   none ,l         * 
+  __addd
+                                  003093d4         0   none ,g         * 
+  sub_in
+                                  003093e6         0   none ,l         * 
+  rotation
+                                  00309406         0   none ,l         * 
+  exception_return
+                                  00309432         0   none ,l         * 
+  sftr1
+                                  00309474         0   none ,l         * 
+  e_sftr31
+                                  00309478         0   none ,l         * 
+  e_sftr55
+                                  0030949e         0   none ,l         * 
+  sftr_loop
+                                  003094a4         0   none ,l         * 
+  end_sftr
+                                  003094ac         0   none ,l         * 
+  mantissa_sub
+                                  003094d0         0   none ,l         * 
+  man_sub1
+                                  003094d8         0   none ,l         * 
+  normalize
+                                  003094e6         0   none ,l         * 
+  norm32_end
+                                  003094f0         0   none ,l         * 
+  norm16_end
+                                  00309500         0   none ,l         * 
+  over_norm
+                                  00309506         0   none ,l         * 
+  overnorm_end
+                                  00309532         0   none ,l         * 
+  norm_loop
+                                  00309538         0   none ,l         * 
+  end_calc
+                                  00309560         0   none ,l         * 
+  end_norm
+                                  00309560         0   none ,l         * 
+  denormalize_loop
+                                  00309568         0   none ,l         * 
+  round
+                                  00309570         0   none ,l         * 
+  end_denormal
+                                  00309570         0   none ,l         * 
+  round_carry
+                                  00309588         0   none ,l         * 
+  end_round
+                                  0030958e         0   none ,l         * 
+  return_value
+                                  0030958e         0   none ,l         * 
   return
                                   003095ac         0   none ,l         * 
-  exception1
-                                  003095c0         0   none ,l         * 
-  exception2
+  plus_zero
                                   003095cc         0   none ,l         * 
-  exception3
-                                  003095d8         0   none ,l         * 
+  swap
+                                  003095d6         0   none ,l         * 
   EXP_INF
                                   003095f0         0   none ,l         * 
   MMASK
                                   003095f4         0   none ,l         * 
+  MSB
+                                  003095f8         0   none ,l         * 
+  LOWMASK
+                                  003095fc         0   none ,l         * 
+  CARRY_CHECK
+                                  00309600         0   none ,l         * 
+  NORMAL
+                                  00309604         0   none ,l         * 
+  SIGN
+                                  00309608         0   none ,l         * 
+  HALF
+                                  0030960c         0   none ,l         * 
+  sftrtbl
+                                  00309610         0   none ,l         * 
+FILE=r_dtoi
+                                  00309694  0030971f        8c
+  __dtou
+                                  00309694         0   none ,g         * 
+  __dtoi
+                                  00309694         0   none ,g         * 
+  loop_sftl
+                                  003096d4         0   none ,l         * 
+  shift_low
+                                  003096de         0   none ,l         * 
+  shift_low1
+                                  003096e6         0   none ,l         * 
+  shift_r
+                                  003096f0         0   none ,l         * 
+  shift_r1
+                                  003096f2         0   none ,l         * 
+  end_shift
+                                  003096f8         0   none ,l         * 
+  return
+                                  003096fe         0   none ,l         * 
+  end_nagate
+                                  003096fe         0   none ,l         * 
+  return_zero
+                                  0030970c         0   none ,l         * 
+  EXP_INF
+                                  00309710         0   none ,l         * 
+  MMASK
+                                  00309714         0   none ,l         * 
+  MSB
+                                  00309718         0   none ,l         * 
+  BIAS
+                                  0030971c         0   none ,l         * 
+FILE=r_ltd
+                                  00309720  003097c7        a8
+  __ltd
+                                  00309720         0   none ,g         * 
+  exception_return1
+                                  00309752         0   none ,l         * 
+  exception_return2
+                                  00309756         0   none ,l         * 
+  exception_return3
+                                  0030975a         0   none ,l         * 
+  minus
+                                  0030976c         0   none ,l         * 
+  sign_def
+                                  00309774         0   none ,l         * 
+  return
+                                  00309778         0   none ,l         * 
+  exception1
+                                  0030978c         0   none ,l         * 
+  exception2
+                                  00309798         0   none ,l         * 
+  exception3
+                                  003097a4         0   none ,l         * 
+  false
+                                  003097bc         0   none ,l         * 
+  EXP_INF
+                                  003097c0         0   none ,l         * 
+  MMASK
+                                  003097c4         0   none ,l         * 
+FILE=r_ned
+                                  003097c8  0030985b        94
+  __ned
+                                  003097c8         0   none ,g         * 
+  exception_return1
+                                  003097fa         0   none ,l         * 
+  exception_return2
+                                  003097fe         0   none ,l         * 
+  exception_return3
+                                  00309802         0   none ,l         * 
+  true
+                                  0030980e         0   none ,l         * 
+  return
+                                  00309810         0   none ,l         * 
+  exception1
+                                  00309824         0   none ,l         * 
+  exception2
+                                  00309830         0   none ,l         * 
+  exception3
+                                  0030983c         0   none ,l         * 
+  EXP_INF
+                                  00309854         0   none ,l         * 
+  MMASK
+                                  00309858         0   none ,l         * 
 FILE=__divws
-                                  003095f8  00309647        50
+                                  0030985c  003098ab        50
   __divws
-                                  003095f8         0   none ,g         * 
+                                  0030985c         0   none ,g         * 
   divws_zero
-                                  00309636         0   none ,l         * 
+                                  0030989a         0   none ,l         * 
   A_errno
-                                  00309640         0   none ,l         * 
+                                  003098a4         0   none ,l         * 
   n_zerono
-                                  00309644         0   none ,l         * 
+                                  003098a8         0   none ,l         * 
 FILE=_duchek
-                                  00309648  00309677        30
+                                  003098ac  003098db        30
   __duchek
-                                  00309648        30   func ,g         * 
+                                  003098ac        30   func ,g         * 
 FILE=_mult
-                                  00309678  00309753        dc
+                                  003098dc  003099b7        dc
   __mult
-                                  00309678        dc   func ,g         * 
+                                  003098dc        dc   func ,g         * 
 FILE=_pow10
-                                  00309754  003097eb        98
+                                  003099b8  00309a4f        98
   __pow10
-                                  00309754        98   func ,g         * 
+                                  003099b8        98   func ,g         * 
 
 SECTION=C
 FILE=addin_sct
-                                  00309f68  00309f7b        14
+                                  0030a218  0030a22b        14
   _B_BGN
-                                  00309f68         0   none ,g         * 
+                                  0030a218         0   none ,g         * 
   _B_END
-                                  00309f6c         0   none ,g         * 
+                                  0030a21c         0   none ,g         * 
   _R_BGN
-                                  00309f70         0   none ,g         * 
+                                  0030a220         0   none ,g         * 
   _R_END
-                                  00309f74         0   none ,g         * 
+                                  0030a224         0   none ,g         * 
   _D_ROM
-                                  00309f78         0   none ,g         * 
+                                  0030a228         0   none ,g         * 
 FILE=_ctype
-                                  0030a100  0030a1ff       100
+                                  0030a3b0  0030a4af       100
   __ctype
-                                  0030a100       100   data ,g         * 
+                                  0030a3b0       100   data ,g         * 
 FILE=_its
-                                  0030a200  0030a287        88
+                                  0030a4b0  0030a537        88
   _table$246
-                                  0030a200        88   data ,l         * 
+                                  0030a4b0        88   data ,l         * 
 FILE=_pow5
-                                  0030a288  0030a367        e0
+                                  0030a538  0030a617        e0
   _w$238
-                                  0030a288        e0   data ,l         * 
+                                  0030a538        e0   data ,l         * 
 FILE=_power
-                                  0030a368  0030a407        a0
+                                  0030a618  0030a6b7        a0
   _conmnts$251
-                                  0030a368        80   data ,l         * 
+                                  0030a618        80   data ,l         * 
   _conexp$252
-                                  0030a3e8        20   data ,l         * 
+                                  0030a698        20   data ,l         * 
 
 SECTION=B_BR_Size
 FILE=C:\casioPr\simplexCasio\Debug\simplexC.obj
@@ -1446,27 +1446,27 @@ FILE=C:\casioPr\simplexCasio\Debug\simplexC.obj
 
 SECTION=B
 FILE=C:\casioPr\simplexCasio\Debug\simplexC.obj
-                                  08100004  0810003b        38
+                                  08100004  0810003f        3c
   _ex
-                                  08100004        38   data ,g         * 
+                                  08100004        3c   data ,g         * 
 FILE=revolution
-                                  0810003c  08100057        1c
+                                  08100040  0810005b        1c
   _gray_test
-                                  0810003c        1c   data ,g         * 
+                                  08100040        1c   data ,g         * 
 FILE=_errno
-                                  08100058  0810005b         4
+                                  0810005c  0810005f         4
   __errno
-                                  08100058         4   data ,g         * 
+                                  0810005c         4   data ,g         * 
 
 SECTION=R
 FILE=C:\casio\OS\FX\lib\setup.obj
-                                  0810005c  0810005f         4
+                                  08100060  08100063         4
   _gb_OnAppClose
-                                  0810005c         4   data ,g         * 
+                                  08100060         4   data ,g         * 
 FILE=revolution
-                                  08100060  08100095        36
+                                  08100064  08100099        36
   _info_text
-                                  08100060        36   data ,g         * 
+                                  08100064        36   data ,g         * 
 
 Absolute value symbols
 FILE=_Bdel_cychdr

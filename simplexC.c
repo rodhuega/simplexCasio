@@ -109,6 +109,7 @@ struct execution
     int currentFuncObjectivePurpose;
     int nVariables;
     int nConstraints;
+    int maxIterations;
 
     float** ajVector; // guarda un vector por cada variable y contiene su valor en todas las constraints.
 };
@@ -1027,7 +1028,7 @@ int printZjAndCjMinusZj(int itId)
                     ex.nodes.its[itId]->zj[menuChoice-1],ex.nodes.its[itId]->cjMinusZj[menuChoice-1]);
             }else
             {
-                sprintf(stroutVariable, "x%d: is a basic var",menuChoice);
+                sprintf(stroutVariable, "x%d: is a basic var. Val 0.",menuChoice);
             }
             PrintMini(0,14,(unsigned char*) stroutVariable,MINI_OVER);
         }
@@ -1046,7 +1047,15 @@ int printIteration(int itId)
     int menuChoice;
     menuChoice=INITIALIZE_VALUE_OPT;
     sprintf(stroutTop,"It %d.ZSol: %.2f Exit %d", itId,ex.nodes.its[itId]->zSol, EXIT_OPT);
-    sprintf(stroutTop2,"VarIn: %d, VarOut: %d. %s",ex.nodes.its[itId]->idVarIn,ex.nodes.its[itId]->idVarOut,ex.nodes.its[itId]->is2FasesActive ? "2fases": "");
+    if(ex.nodes.its[itId]->idVarIn==-1)
+    {
+        sprintf(stroutTop2, "No VarIn and VarOut");
+
+    }else
+    {
+        sprintf(stroutTop2, "IdVarIn: %d, IdVarOut %d  %s",ex.nodes.its[itId]->idVarIn+1,ex.nodes.its[itId]->idVarOut+1,ex.nodes.its[itId]->is2FasesActive ? "2fases": "");
+    }
+    // sprintf(stroutTop2,"VarIn: %d, VarOut: %d. %s",ex.nodes.its[itId]->idVarIn,ex.nodes.its[itId]->idVarOut,ex.nodes.its[itId]->is2FasesActive ? "2fases": "");
     while(menuChoice!=EXIT_OPT)
     {
         Bdisp_AllClr_DDVRAM();
@@ -1284,6 +1293,7 @@ struct iteration* getProblemFromTableau()
     int problemType;
     struct iteration *it;
     float ** temporalTableau;
+    it=malloc(sizeof(struct iteration));
     it->numIteration=0;
     it = malloc(sizeof(struct iteration));
     Bdisp_AllClr_DDVRAM();
@@ -1297,6 +1307,16 @@ struct iteration* getProblemFromTableau()
     it->BinvSize=nConstraints;
     it->idBasicVariables=calloc(nVariables,sizeof(float));
     it->idByRowOfBasicVarsInBInv=calloc(it->BinvSize,sizeof(float));
+    it->xb=calloc(nConstraints,sizeof(float));
+    temporalTableau = calloc(nConstraints,sizeof(float*));
+    it->cjMinusZj=calloc(nVariables,sizeof(float));
+    ex.inputCvectorValues=calloc(nVariables+1,sizeof(float));
+    ex.bVectorValues=calloc(nConstraints,sizeof(float));
+    it->yj=calloc(nVariables,sizeof(float*));
+    ex.ajVector=calloc(nVariables,sizeof(float*));
+    ex.nVariables=nVariables;
+    ex.nConstraints=nConstraints;
+
     //Administracion de variables basicas
     for (i = 0; i < nConstraints; i++)
     {
@@ -1309,7 +1329,6 @@ struct iteration* getProblemFromTableau()
         it->idBasicVariables[it->idByRowOfBasicVarsInBInv[i]]=1;
     }
     //Valores de las variables en la tabla
-    temporalTableau = calloc(nConstraints,sizeof(float*));
     for(i=0;i<nConstraints;i++)
     {
         temporalTableau[i]= calloc(nVariables,sizeof(float*));
@@ -1323,8 +1342,7 @@ struct iteration* getProblemFromTableau()
             memset(strout,0,128);
         }
     }
-    //Valores de xB
-    it->xb=calloc(nConstraints,sizeof(float));
+    //Valores de xB y de los bValues en las constrainsts
     for(i=0;i<nConstraints;i++)
     {
         Bdisp_AllClr_DDVRAM();
@@ -1334,8 +1352,16 @@ struct iteration* getProblemFromTableau()
         Bdisp_PutDisp_DD();
         memset(strout,0,128);
     }
+    for(i=0;i<nConstraints;i++)
+    {
+        Bdisp_AllClr_DDVRAM();
+        sprintf(strout,"Value b Constraint %d",i+1);
+        PrintMini(0, 0, (unsigned char *)strout, MINI_OVER);
+        ex.bVectorValues[i] = InputD(0, 7);
+        Bdisp_PutDisp_DD();
+        memset(strout,0,128);
+    }
     //Valores Cj-Zj
-    it->cjMinusZj=calloc(nVariables,sizeof(float));
     for(i=0;i<nVariables;i++)
     {
         Bdisp_AllClr_DDVRAM();
@@ -1354,7 +1380,6 @@ struct iteration* getProblemFromTableau()
     Bdisp_AllClr_DDVRAM();
     sprintf(strout,"OBJ. Min: %d, Max %d",FUNC_MINIMIZE,FUNC_MAXIMIZE);
     PrintMini(0, 0, (unsigned char *)strout, MINI_OVER);
-    ex.inputCvectorValues=calloc(nVariables+1,sizeof(float));
     ex.currentFuncObjectivePurpose = InputI(0, 7);
     Bdisp_PutDisp_DD();
     memset(strout,0,128);
@@ -1372,6 +1397,59 @@ struct iteration* getProblemFromTableau()
     PrintMini(0, 0, (unsigned char *)strout, MINI_OVER);
     ex.inputCvectorValues[nVariables] = InputD(0, 7);
     Bdisp_PutDisp_DD();
+    //Vectores aj
+    for(i=0;i<nVariables;i++)
+    {
+        ex.ajVector[i]=calloc(nConstraints,sizeof(float));
+        for(j=0;j<nConstraints;j++)
+        {
+            Bdisp_AllClr_DDVRAM();
+            sprintf(strout,"Aj[%d][%d] var: ",i+1,j+1);
+            PrintMini(0, 0, (unsigned char *)strout, MINI_OVER);
+            ex.ajVector[i][j] = InputD(0, 7);
+            Bdisp_PutDisp_DD();
+            memset(strout,0,128);
+        }
+    }
+    //HARDCODED DEBUG/////////////////////////////////////////////////////////
+    // for(i=0;i<nConstraints;i++)
+    // {
+    //     temporalTableau[i]= calloc(nVariables,sizeof(float*));
+    // }
+    // temporalTableau[0][0]=1;
+    // temporalTableau[0][1]=2;
+    // temporalTableau[0][2]=-3;
+    // temporalTableau[0][3]=1;
+    // temporalTableau[0][4]=0;
+    // temporalTableau[1][0]=2;
+    // temporalTableau[1][1]=1;
+    // temporalTableau[1][2]=-4;
+    // temporalTableau[1][3]=0;
+    // temporalTableau[1][4]=1;
+    // it->xb[0]=5;
+    // it->xb[1]=7;
+    // it->cjMinusZj[0]=-4;
+    // it->cjMinusZj[1]=0.5;
+    // it->cjMinusZj[2]=-1;
+    // it->cjMinusZj[3]=0;
+    // it->cjMinusZj[4]=0;
+    // it->zSol=0;
+    // it->idByRowOfBasicVarsInBInv[0]=3;
+    // it->idByRowOfBasicVarsInBInv[1]=4;
+    // it->idBasicVariables[it->idByRowOfBasicVarsInBInv[0]]=1;
+    // it->idBasicVariables[it->idByRowOfBasicVarsInBInv[1]]=1;
+    // ex.inputCvectorValues[0]=-4;
+    // ex.inputCvectorValues[1]=0.5;
+    // ex.inputCvectorValues[2]=-1;
+    // ex.inputCvectorValues[3]=0;
+    // ex.inputCvectorValues[4]=0;
+    // ex.inputCvectorValues[5]=0;
+    // ex.bVectorValues[0]=5;
+    // ex.bVectorValues[1]=7;
+    // ex.currentFuncObjectivePurpose=FUNC_MAXIMIZE;
+    //HARDCODED DEBUG//////////////////////////////////////////////////////////////////////////
+
+
 
     //Adaptacion a iteracion de Binv
     it->Binv=calloc(it->BinvSize,sizeof(float*));
@@ -1380,20 +1458,24 @@ struct iteration* getProblemFromTableau()
         it->Binv[i]=calloc(it->BinvSize,sizeof(float));
         for(j=0;j<it->BinvSize;j++)
         {
-            it->Binv[i][j]=temporalTableau[it->idByRowOfBasicVarsInBInv[i]][it->idByRowOfBasicVarsInBInv[j]];
+            it->Binv[i][j]=temporalTableau[i][it->idByRowOfBasicVarsInBInv[j]];
         }
     }
     //Adaptacion a iteracion de vectores Y
-    // it->yj=calloc(nVariables,sizeof(float*));
-    // for(i=0;i<nVariables;i++)
-    // {
-    //     it->yj[i]=calloc(nConstraints,sizeof(float));
-    //     for(j=0;j<nConstraints;j++)
-    //     {
-    //         it->yj[i][j]=temporalTableau[j][i];
-    //     }
-    // }
+    for(i=0;i<nVariables;i++)
+    {
+        it->yj[i]=calloc(nConstraints,sizeof(float));
+        for(j=0;j<nConstraints;j++)
+        {
+            it->yj[i][j]=temporalTableau[j][i];
+        }
+    }
+    
     free(temporalTableau);
+    ex.canonicalStatement=malloc(sizeof(struct problemStatement));
+    ex.canonicalStatement->is2fasesActive=0;
+    ex.canonicalStatement->is2fasesNeeded=0;
+    ex.canonicalStatement->id2fasesVariables=calloc(nVariables,sizeof(int));
     return it;
 }
 
@@ -1406,7 +1488,11 @@ int selectExecutionMode()
     ex.mode = InputI(0, 7);
     Bdisp_PutDisp_DD();
     ex.nNodes=1;
-    ex.nodes.its=malloc(10*sizeof(struct iteration*));
+    Bdisp_AllClr_DDVRAM();
+    PrintMini(0, 0, (unsigned char *)"Set maxIterations", MINI_OVER);
+    ex.maxIterations = InputI(0, 7)+1;
+    Bdisp_PutDisp_DD();
+    ex.nodes.its=malloc(ex.maxIterations*sizeof(struct iteration*));
     return 0;
 }
 
@@ -1663,7 +1749,7 @@ int solveSimplexLPOneFase(int nodeId, int firsItId)
     float zSol;
     itId=firsItId;
     ex.nodes.its[itId]->numIteration=itId;
-    while(ex.nodes.its[itId]->idVarIn!=-1 && ex.nodes.its[itId]->idVarOut!=-1)
+    while(itId<ex.maxIterations &&ex.nodes.its[itId]->idVarIn!=-1 && ex.nodes.its[itId]->idVarOut!=-1)
     {
         calculateIteration(ex.nodes.its[itId]);
         if(ex.nodes.its[itId]->idVarIn!=-1 && ex.nodes.its[itId]->idVarOut!=-1){
@@ -1686,14 +1772,16 @@ int solveSimplexLP(int nodeId)
     {
         ex.nodes.its[0]=modelToIteration(ex.canonicalStatement);
     }
-    if(ex.canonicalStatement->is2fasesActive)
+    if(ex.mode==MODE_FULL_EXECUTION && ex.canonicalStatement->is2fasesActive)
     {
         lastItId=solveSimplexLPOneFase(nodeId, 0);
         ex.currentFuncObjectivePurpose=ex.canonicalStatement->funcObjectivePurpose;//CAMBIAR
-        //NO SE SI HACE FALTA MAS
-        ex.canonicalStatement->is2fasesActive=0;
-        ex.nodes.its[lastItId+1]=convertToSecondPhase(nodeId, lastItId);
-        lastItId=solveSimplexLPOneFase(nodeId, lastItId+1);
+        if(lastItId<ex.maxIterations)
+        {
+            ex.canonicalStatement->is2fasesActive=0;
+            ex.nodes.its[lastItId+1]=convertToSecondPhase(nodeId, lastItId);
+            lastItId=solveSimplexLPOneFase(nodeId, lastItId+1);
+        }
     }else
     {
         lastItId=solveSimplexLPOneFase(nodeId, 0);
@@ -1731,8 +1819,8 @@ int AddIn_main(int isAppli, unsigned short OptionNum)
         // Bdisp_PutDisp_DD();
         // Sleep(3000);
         Bdisp_AllClr_DDVRAM();
-        ex.initialProblemStatement=createProblemStatementToDebug2Fases();
-        // ex.initialProblemStatement=getProblemInputs();
+        // ex.initialProblemStatement=createProblemStatementToDebug2Fases();
+        ex.initialProblemStatement=getProblemInputs();
         printStatementMenu(ex.initialProblemStatement);
         convertModel(ex);
         printStatementMenu(ex.canonicalStatement);
